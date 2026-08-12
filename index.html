@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Camp Ezekiel Awards — Cast Your Ballot</title>
+<meta name="description" content="Vote for the region that ran it up this summer. Four awards, five regions, one anonymous ballot. Live results as the votes come in.">
+<meta name="theme-color" content="#08060c">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Camp Ezekiel Awards">
+<meta property="og:description" content="Four awards. Five regions. One ballot. Vote now — results are live.">
+<meta property="og:image" content="share.jpg?v=1">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Camp Ezekiel Awards">
+<meta name="twitter:description" content="Four awards. Five regions. One ballot. Vote now — results are live.">
+<meta name="twitter:image" content="share.jpg?v=1">
+
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,700&family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --gold:#e8c469;
+  --gold-bright:#ffeab0;
+  --gold-deep:#a8781f;
+  --ink:#08060c;
+  --ink-2:#110c19;
+  --card:rgba(255,255,255,.038);
+  --card-hi:rgba(255,255,255,.065);
+  --line:rgba(232,196,105,.26);
+  --line-soft:rgba(255,255,255,.09);
+  --text:#f4ede0;
+  --muted:#a79d8d;
+
+  --r-south:#f5a623;
+  --r-midwest:#37c98b;
+  --r-northeast:#5b8dff;
+  --r-southeast:#ff6b9d;
+  --r-west:#a970ff;
+
+  --display:"Playfair Display",Georgia,"Times New Roman",serif;
+  --ui:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --wrap:1080px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--text);
+  font-family:var(--ui);
+  font-size:16px;
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- stage lighting ---------- */
+.stage{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.stage::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 80% at 50% -10%,rgba(232,196,105,.16),transparent 60%),
+             radial-gradient(90% 60% at 50% 110%,rgba(90,60,160,.18),transparent 65%);
+}
+.beam{
+  position:absolute;top:-40vh;left:50%;
+  width:34vw;height:150vh;
+  background:linear-gradient(180deg,rgba(232,196,105,.20),rgba(232,196,105,.05) 45%,transparent 78%);
+  filter:blur(28px);
+  transform-origin:50% 0;
+  mix-blend-mode:screen;
+}
+.beam.b1{margin-left:-46vw;animation:sway1 13s ease-in-out infinite}
+.beam.b2{margin-left:12vw;animation:sway2 17s ease-in-out infinite}
+.beam.b3{margin-left:-14vw;width:22vw;opacity:.6;animation:sway3 21s ease-in-out infinite}
+@keyframes sway1{0%,100%{transform:rotate(11deg)}50%{transform:rotate(-7deg)}}
+@keyframes sway2{0%,100%{transform:rotate(-13deg)}50%{transform:rotate(6deg)}}
+@keyframes sway3{0%,100%{transform:rotate(4deg)}50%{transform:rotate(-4deg)}}
+
+.grain{
+  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.wrap{position:relative;z-index:2;max-width:var(--wrap);margin:0 auto;padding:0 20px}
+
+/* ---------- nav ---------- */
+nav{
+  position:sticky;top:0;z-index:40;
+  backdrop-filter:blur(14px);
+  background:linear-gradient(180deg,rgba(8,6,12,.92),rgba(8,6,12,.68));
+  border-bottom:1px solid var(--line-soft);
+}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:62px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.14em;font-size:.7rem;text-transform:uppercase;color:var(--gold)}
+.brand svg{width:20px;height:20px;flex:none}
+.nav-links{display:flex;gap:22px;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.nav-links a{color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a:focus-visible{color:var(--gold-bright)}
+@media(max-width:640px){.nav-links{gap:14px;font-size:.68rem}.brand span{display:none}}
+
+/* ---------- hero ---------- */
+header.hero{padding:76px 0 54px;text-align:center;position:relative}
+.kicker{
+  font-size:.72rem;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--gold);font-weight:600;margin-bottom:26px;
+}
+.trophy{width:76px;height:76px;margin:0 auto 18px;display:block;filter:drop-shadow(0 6px 26px rgba(232,196,105,.45))}
+h1{
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(2.7rem,9vw,5.4rem);line-height:.96;margin:0 0 8px;
+  background:linear-gradient(180deg,var(--gold-bright) 8%,var(--gold) 48%,var(--gold-deep) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  letter-spacing:-.02em;
+}
+.hero-sub{
+  font-family:var(--display);font-style:italic;font-size:clamp(1rem,2.6vw,1.35rem);
+  color:var(--muted);margin:0 auto 30px;max-width:34ch;
+}
+.hero-note{max-width:52ch;margin:0 auto 30px;color:var(--muted);font-size:.95rem}
+.hero-note strong{color:var(--text);font-weight:600}
+
+.live-chip{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:9px 18px;border:1px solid var(--line);border-radius:999px;
+  background:rgba(232,196,105,.07);font-size:.8rem;font-weight:600;letter-spacing:.05em;
+}
+.dot{width:8px;height:8px;border-radius:50%;background:#ff4d5e;box-shadow:0 0 0 0 rgba(255,77,94,.7);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px rgba(255,77,94,0)}100%{box-shadow:0 0 0 0 rgba(255,77,94,0)}}
+.live-chip b{color:var(--gold-bright);font-variant-numeric:tabular-nums}
+
+/* ---------- marquee bulbs ---------- */
+.bulbs{display:flex;justify-content:center;gap:14px;margin:44px 0 8px}
+.bulbs i{
+  width:7px;height:7px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 10px var(--gold);animation:blink 2.4s infinite;
+}
+.bulbs i:nth-child(2n){animation-delay:.3s}
+.bulbs i:nth-child(3n){animation-delay:.6s}
+.bulbs i:nth-child(5n){animation-delay:.9s}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.22}}
+
+/* ---------- sections ---------- */
+section{padding:56px 0}
+.sec-head{text-align:center;margin-bottom:40px}
+.sec-head h2{
+  font-family:var(--display);font-size:clamp(1.9rem,5vw,3rem);margin:0 0 10px;
+  color:var(--gold-bright);font-weight:700;letter-spacing:-.01em;
+}
+.sec-head p{color:var(--muted);margin:0 auto;max-width:56ch}
+
+/* ---------- award card ---------- */
+.card{
+  position:relative;
+  border:1px solid var(--line-soft);border-radius:18px;
+  background:linear-gradient(180deg,var(--card),rgba(255,255,255,.012));
+  padding:30px 26px 26px;margin-bottom:26px;
+  transition:border-color .3s,transform .3s,box-shadow .3s;
+}
+.card::before,.card::after{
+  content:"";position:absolute;width:16px;height:16px;
+  border:1px solid var(--line);opacity:.85;
+}
+.card::before{top:12px;left:12px;border-right:0;border-bottom:0;border-radius:4px 0 0 0}
+.card::after{bottom:12px;right:12px;border-left:0;border-top:0;border-radius:0 0 4px 0}
+.card:focus-within,.card.has-pick{border-color:var(--line);box-shadow:0 18px 60px -30px rgba(232,196,105,.55)}
+.card.locked{opacity:.96}
+
+.card-top{display:flex;align-items:flex-start;gap:18px;margin-bottom:22px}
+.numeral{
+  font-family:var(--display);font-size:2.6rem;line-height:1;font-weight:800;
+  color:transparent;-webkit-text-stroke:1px var(--gold-deep);flex:none;padding-top:2px;
+}
+.card-title{flex:1;min-width:0}
+.award-tag{
+  font-size:.64rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);
+  font-weight:700;margin-bottom:7px;
+}
+.card-title h3{
+  font-family:var(--display);font-size:clamp(1.4rem,4vw,2.05rem);margin:0 0 8px;
+  color:var(--text);font-weight:700;line-height:1.14;letter-spacing:-.01em;
+}
+.card-title p{margin:0;color:var(--muted);font-size:.93rem;max-width:60ch}
+
+/* ---------- region picker ---------- */
+fieldset{border:0;padding:0;margin:0;min-width:0}
+legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.regions{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:10px}
+.regions input{position:absolute;opacity:0;width:1px;height:1px}
+.region{
+  --c:var(--gold);
+  display:flex;align-items:center;gap:11px;
+  padding:14px 15px;border-radius:12px;cursor:pointer;
+  border:1px solid var(--line-soft);
+  background:rgba(255,255,255,.022);
+  font-weight:600;font-size:.92rem;
+  transition:background .18s,border-color .18s,transform .18s;
+  user-select:none;
+}
+.region:hover{background:var(--card-hi);transform:translateY(-1px)}
+.region .pip{
+  width:13px;height:13px;border-radius:50%;flex:none;
+  border:2px solid var(--c);background:transparent;transition:background .18s,box-shadow .18s;
+}
+.regions input:checked + .region{
+  border-color:var(--c);
+  background:color-mix(in srgb,var(--c) 14%,transparent);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 40%,transparent);
+}
+.regions input:checked + .region .pip{background:var(--c);box-shadow:0 0 10px var(--c)}
+.regions input:focus-visible + .region{outline:2px solid var(--gold-bright);outline-offset:2px}
+.regions input:disabled + .region{cursor:default;opacity:.4}
+.regions input:disabled:checked + .region{opacity:1}
+
+.locked-note{
+  display:none;margin-top:14px;font-size:.82rem;color:var(--gold);
+  letter-spacing:.04em;align-items:center;gap:8px;
+}
+.card.locked .locked-note{display:flex}
+
+/* ---------- sticky submit ---------- */
+.ballot-bar{
+  position:sticky;bottom:0;z-index:35;margin-top:8px;
+  background:linear-gradient(180deg,rgba(8,6,12,.55),rgba(8,6,12,.97));
+  backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);
+  padding:16px 0 calc(16px + env(safe-area-inset-bottom));
+}
+/* Once every category is locked the bar has no job left — let it scroll away
+   instead of pinning a tall confirmation panel over the results. */
+.ballot-bar.done{position:static;background:none;backdrop-filter:none}
+.ballot-bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.progress{display:flex;flex-direction:column;gap:8px;min-width:200px;flex:1}
+.progress-label{font-size:.8rem;color:var(--muted);letter-spacing:.05em}
+.progress-label b{color:var(--gold-bright);font-variant-numeric:tabular-nums}
+.track{height:5px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden;max-width:340px}
+.track i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--gold-deep),var(--gold-bright));transition:width .45s cubic-bezier(.2,.8,.2,1)}
+
+.btn{
+  font-family:var(--ui);font-weight:800;font-size:.9rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:15px 32px;border-radius:999px;border:0;cursor:pointer;
+  background:linear-gradient(135deg,var(--gold-bright),var(--gold) 45%,var(--gold-deep));
+  color:#1a1204;box-shadow:0 12px 34px -14px rgba(232,196,105,.85);
+  transition:transform .18s,box-shadow .18s,filter .18s;
+}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 18px 44px -14px rgba(232,196,105,.95)}
+.btn:disabled{filter:grayscale(.75) brightness(.6);cursor:not-allowed;box-shadow:none}
+.btn.ghost{
+  background:transparent;color:var(--gold);border:1px solid var(--line);
+  box-shadow:none;font-size:.78rem;padding:12px 22px;
+}
+.btn.ghost:hover{background:rgba(232,196,105,.09);transform:none}
+
+.msg{width:100%;font-size:.85rem;color:var(--gold-bright);margin:0}
+.msg.error{color:#ff8a95}
+
+/* On a phone the sticky bar has to earn its height — one compact row of controls. */
+@media(max-width:640px){
+  .ballot-bar{padding:11px 0 calc(11px + env(safe-area-inset-bottom))}
+  .ballot-bar .wrap{gap:10px}
+  .progress{min-width:0;gap:5px}
+  .progress-label{font-size:.72rem}
+  .track{max-width:none}
+  .ballot-bar .btn{padding:12px 18px;font-size:.76rem;letter-spacing:.08em}
+  .ballot-bar .btn.ghost{padding:11px 14px;font-size:.7rem}
+  .msg{font-size:.78rem;line-height:1.4}
+}
+
+/* ---------- results ---------- */
+.results-head{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
+.result-block{
+  border:1px solid var(--line-soft);border-radius:18px;
+  background:linear-gradient(180deg,var(--card),rgba(255,255,255,.012));
+  padding:26px 24px;margin-bottom:20px;
+}
+.result-block h3{
+  font-family:var(--display);font-size:1.3rem;margin:0 0 4px;color:var(--gold-bright);font-weight:700;
+}
+.result-meta{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
+.bar-row{display:grid;grid-template-columns:1fr;gap:6px;margin-bottom:14px}
+.bar-label{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.88rem}
+.bar-name{display:flex;align-items:center;gap:9px;font-weight:600;min-width:0}
+.bar-name .swatch{width:9px;height:9px;border-radius:2px;flex:none;background:var(--c,var(--gold))}
+.bar-name .crown{font-size:.9rem;filter:drop-shadow(0 0 6px rgba(232,196,105,.8))}
+.bar-val{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.82rem;white-space:nowrap}
+.bar-val b{color:var(--text);font-size:.95rem}
+.bar-track{height:9px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+.bar-fill{
+  display:block;height:100%;width:0;border-radius:99px;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--c,var(--gold)) 55%,#000),var(--c,var(--gold)));
+  transition:width .8s cubic-bezier(.2,.8,.2,1);
+}
+.bar-row.leader .bar-fill{box-shadow:0 0 18px -2px var(--c,var(--gold))}
+.bar-row.leader .bar-name{color:var(--gold-bright)}
+
+.overall{
+  border:1px solid var(--line);border-radius:18px;padding:28px 24px;margin-bottom:24px;
+  background:radial-gradient(120% 140% at 50% 0%,rgba(232,196,105,.10),rgba(255,255,255,.02));
+  text-align:center;
+}
+.overall h3{font-family:var(--display);font-size:clamp(1.4rem,4vw,2rem);margin:0 0 4px;color:var(--gold-bright)}
+.overall .champ{font-family:var(--display);font-size:clamp(2rem,7vw,3.4rem);font-weight:800;margin:12px 0 4px;line-height:1.05}
+.overall .champ small{display:block;font-family:var(--ui);font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:10px}
+
+.empty{text-align:center;color:var(--muted);padding:22px;font-style:italic}
+
+/* ---------- curtain + confetti ---------- */
+#confetti{position:fixed;inset:0;z-index:60;pointer-events:none}
+.flash{
+  position:fixed;inset:0;z-index:55;pointer-events:none;opacity:0;
+  background:radial-gradient(circle at 50% 45%,rgba(255,234,176,.9),transparent 62%);
+}
+.flash.go{animation:flashout 1.1s ease-out forwards}
+@keyframes flashout{0%{opacity:.85}100%{opacity:0}}
+
+footer{
+  border-top:1px solid var(--line-soft);margin-top:40px;padding:34px 0 46px;
+  text-align:center;color:var(--muted);font-size:.84rem;
+}
+footer a{color:var(--gold);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+.hidden{display:none !important}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="stage" aria-hidden="true">
+  <div class="beam b1"></div>
+  <div class="beam b2"></div>
+  <div class="beam b3"></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="flash" id="flash" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top" style="text-decoration:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v1a4 4 0 0 0 3 3.9"/><path d="M17 6h3v1a4 4 0 0 1-3 3.9"/><path d="M12 14v3"/><path d="M8.5 20h7l-.7-3h-5.6l-.7 3Z"/>
+      </svg>
+      <span>Camp Ezekiel Awards</span>
+    </a>
+    <div class="nav-links">
+      <a href="#ballot">Ballot</a>
+      <a href="#results">Live Results</a>
+      <a href="leaderboard.html">Big Screen</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="kicker">Forward In Faith · Youth &amp; Young Adults</div>
+
+    <svg class="trophy" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffeab0"/><stop offset="52%" stop-color="#e8c469"/><stop offset="100%" stop-color="#a8781f"/>
+        </linearGradient>
+      </defs>
+      <path d="M20 8h24v14a12 12 0 0 1-24 0V8Z" fill="url(#g)"/>
+      <path d="M20 12h-8v3a10 10 0 0 0 8 9.8M44 12h8v3a10 10 0 0 1-8 9.8" stroke="url(#g)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M32 34v8" stroke="url(#g)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M22 56h20l-2.4-9H24.4L22 56Z" fill="url(#g)"/>
+    </svg>
+
+    <h1>The Camp<br>Ezekiel Awards</h1>
+    <p class="hero-sub">Five regions ran their camps. Only one takes home each trophy.</p>
+    <p class="hero-note">Four categories. One ballot. <strong>Completely anonymous</strong> — no name, no email, no sign-in. Pick one region per award, then watch the numbers move in real time.</p>
+
+    <div class="live-chip">
+      <span class="dot" aria-hidden="true"></span>
+      <span><b id="ballotCount">—</b> ballots cast so far</span>
+    </div>
+
+    <div class="bulbs" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+  </div>
+</header>
+
+<section id="ballot">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>The Categories</h2>
+      <p>Vote for the region whose camp deserves it. You get one vote in each category — choose carefully, it locks in once you submit.</p>
+    </div>
+    <form id="ballotForm">
+      <div id="cards"></div>
+    </form>
+  </div>
+</section>
+
+<div class="ballot-bar" id="ballotBar">
+  <div class="wrap">
+    <div class="progress">
+      <div class="progress-label"><b id="pickCount">0</b> of <b id="totalCount">4</b> categories picked</div>
+      <div class="track"><i id="trackFill"></i></div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <a class="btn ghost" href="#results">Skip to results</a>
+      <button class="btn" id="submitBtn" type="button" disabled>Submit Ballot</button>
+    </div>
+    <p class="msg hidden" id="msg"></p>
+  </div>
+</div>
+
+<section id="results">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="results-head">
+        <span class="dot" aria-hidden="true"></span>
+        <h2 style="margin:0">Live Results</h2>
+      </div>
+      <p>Updating automatically as ballots come in. Last refreshed <span id="updatedAt">—</span>.</p>
+    </div>
+
+    <div class="overall" id="overallBlock">
+      <h3>Region of the Night</h3>
+      <p class="result-meta" style="margin-bottom:0">Most votes across all four awards</p>
+      <div class="champ" id="champName" style="color:var(--muted)">Awaiting votes</div>
+      <div id="overallBars" style="margin-top:24px;text-align:left"></div>
+    </div>
+
+    <div id="resultBlocks"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p style="margin:0 0 8px">Votes are anonymous. We store a random ballot code in your browser so you can't vote twice — it isn't linked to you in any way.</p>
+    <p style="margin:0">The Camp Ezekiel Awards · <a href="https://southregionyouth.org">southregionyouth.org</a></p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Keep these two lists in sync with functions/_shared.js. */
+  const AWARDS = [
+    { id:'fomo', num:'01', tag:'The FOMO Award',
+      title:"I Should've Gone To That Camp",
+      desc:"The camp that gave everybody else the biggest case of FOMO. You saw the pictures and felt something." },
+    { id:'stealing', num:'02', tag:'The Grand Larceny Award',
+      title:"We're Stealing This Next Year",
+      desc:"The camp with the idea every other region wishes they had thought of first. Consider it borrowed." },
+    { id:'cook', num:'03', tag:"The Chef's Special",
+      title:"Who Let Them Cook",
+      desc:"The camp with the most creative, unexpected, outside-the-box idea. Nobody saw it coming — and it worked." },
+    { id:'runback', num:'04', tag:'The Encore Award',
+      title:"Run That Back",
+      desc:"The activity or event everybody wants to see return next year. Same energy, do it again." }
+  ];
+
+  const REGIONS = [
+    { id:'south',     name:'South Region',      color:'var(--r-south)' },
+    { id:'midwest',   name:'Midwest Region',    color:'var(--r-midwest)' },
+    { id:'northeast', name:'North East Region', color:'var(--r-northeast)' },
+    { id:'southeast', name:'South East Region', color:'var(--r-southeast)' },
+    { id:'west',      name:'West Region',       color:'var(--r-west)' }
+  ];
+
+  const REGION_BY_ID = Object.fromEntries(REGIONS.map(r => [r.id, r]));
+  const TOKEN_KEY = 'ce_awards_ballot_v1';
+  const POLL_MS = 7000;
+
+  const $ = (id) => document.getElementById(id);
+  const picks = {};          // award id -> region id, this session's unsubmitted choices
+  const locked = new Set();  // award ids already recorded on the server
+
+  /* ---------- anonymous ballot token ---------- */
+  function ballotToken(){
+    let t = null;
+    try { t = localStorage.getItem(TOKEN_KEY); } catch(e){}
+    if (!t || !/^[0-9a-f-]{36}$/i.test(t)) {
+      t = (crypto.randomUUID ? crypto.randomUUID() : fallbackUuid());
+      try { localStorage.setItem(TOKEN_KEY, t); } catch(e){}
+    }
+    return t;
+  }
+  function fallbackUuid(){
+    const b = crypto.getRandomValues(new Uint8Array(16));
+    b[6] = (b[6] & 0x0f) | 0x40; b[8] = (b[8] & 0x3f) | 0x80;
+    const h = [...b].map(x => x.toString(16).padStart(2,'0')).join('');
+    return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;
+  }
+  const TOKEN = ballotToken();
+
+  /* ---------- build the ballot ---------- */
+  function buildCards(){
+    const frag = document.createDocumentFragment();
+
+    AWARDS.forEach(award => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.id = 'card-' + award.id;
+
+      const options = REGIONS.map(region => `
+        <input type="radio" name="${award.id}" id="${award.id}-${region.id}" value="${region.id}">
+        <label class="region" for="${award.id}-${region.id}" style="--c:${region.color}">
+          <span class="pip" aria-hidden="true"></span>${region.name}
+        </label>`).join('');
+
+      card.innerHTML = `
+        <div class="card-top">
+          <div class="numeral" aria-hidden="true">${award.num}</div>
+          <div class="card-title">
+            <div class="award-tag">${award.tag}</div>
+            <h3>${award.title}</h3>
+            <p>${award.desc}</p>
+          </div>
+        </div>
+        <fieldset>
+          <legend>${award.title} — pick one region</legend>
+          <div class="regions">${options}</div>
+        </fieldset>
+        <p class="locked-note">&#10003; Vote locked in for this category.</p>`;
+
+      frag.appendChild(card);
+    });
+
+    $('cards').appendChild(frag);
+    $('totalCount').textContent = AWARDS.length;
+
+    $('cards').addEventListener('change', (e) => {
+      if (e.target.type !== 'radio') return;
+      picks[e.target.name] = e.target.value;
+      $('card-' + e.target.name).classList.add('has-pick');
+      updateProgress();
+    });
+  }
+
+  function updateProgress(){
+    const open = AWARDS.filter(a => !locked.has(a.id));
+    const chosen = open.filter(a => picks[a.id]).length;
+    const done = locked.size;
+
+    $('pickCount').textContent = done + chosen;
+    $('trackFill').style.width = ((done + chosen) / AWARDS.length * 100) + '%';
+
+    const btn = $('submitBtn');
+    if (open.length === 0) {
+      btn.disabled = true;
+      btn.textContent = 'Ballot Complete';
+      $('ballotBar').classList.add('done');
+    } else {
+      btn.disabled = chosen === 0;
+      btn.textContent = done > 0 ? 'Submit Remaining' : 'Submit Ballot';
+    }
+  }
+
+  function lockAward(awardId, regionId){
+    locked.add(awardId);
+    const card = $('card-' + awardId);
+    if (!card) return;
+    card.classList.add('locked','has-pick');
+    card.querySelectorAll('input[type=radio]').forEach(input => {
+      input.checked = input.value === regionId;
+      input.disabled = true;
+    });
+  }
+
+  function say(text, isError){
+    const el = $('msg');
+    el.textContent = text;
+    el.classList.toggle('error', !!isError);
+    el.classList.toggle('hidden', !text);
+  }
+
+  /* ---------- results rendering ---------- */
+  function buildResultBlocks(){
+    $('resultBlocks').innerHTML = AWARDS.map(award => `
+      <div class="result-block">
+        <h3>${award.title}</h3>
+        <p class="result-meta">${award.tag} · <span id="tot-${award.id}">0</span> votes</p>
+        <div id="bars-${award.id}"></div>
+      </div>`).join('');
+
+    $('overallBars').innerHTML = barsMarkup('overall');
+    AWARDS.forEach(a => { $('bars-' + a.id).innerHTML = barsMarkup(a.id); });
+  }
+
+  function barsMarkup(scope){
+    return REGIONS.map(region => `
+      <div class="bar-row" id="row-${scope}-${region.id}" style="--c:${region.color}">
+        <div class="bar-label">
+          <span class="bar-name">
+            <span class="swatch" aria-hidden="true"></span>
+            <span>${region.name}</span>
+            <span class="crown hidden" id="crown-${scope}-${region.id}" aria-hidden="true">&#128081;</span>
+          </span>
+          <span class="bar-val"><b id="n-${scope}-${region.id}">0</b> <span id="p-${scope}-${region.id}">0%</span></span>
+        </div>
+        <div class="bar-track"><i class="bar-fill" id="f-${scope}-${region.id}"></i></div>
+      </div>`).join('');
+  }
+
+  function paint(scope, counts){
+    const total = REGIONS.reduce((sum, r) => sum + (counts[r.id] || 0), 0);
+    const top = Math.max(0, ...REGIONS.map(r => counts[r.id] || 0));
+
+    REGIONS.forEach(region => {
+      const n = counts[region.id] || 0;
+      const pct = total ? (n / total * 100) : 0;
+      $('n-' + scope + '-' + region.id).textContent = n;
+      $('p-' + scope + '-' + region.id).textContent = Math.round(pct) + '%';
+      $('f-' + scope + '-' + region.id).style.width = (total ? (n / top * 100) : 0) + '%';
+
+      const isLeader = total > 0 && n === top;
+      $('row-' + scope + '-' + region.id).classList.toggle('leader', isLeader);
+      $('crown-' + scope + '-' + region.id).classList.toggle('hidden', !isLeader);
+    });
+
+    return { total, top };
+  }
+
+  function renderResults(data){
+    if (!data || !data.awards) return;
+
+    AWARDS.forEach(award => {
+      const block = data.awards[award.id];
+      if (!block) return;
+      paint(award.id, block.regions);
+      $('tot-' + award.id).textContent = block.total;
+    });
+
+    const overall = paint('overall', data.overall || {});
+    $('ballotCount').textContent = (data.ballots || 0).toLocaleString();
+
+    const champ = $('champName');
+    if (overall.total === 0) {
+      champ.textContent = 'Awaiting votes';
+      champ.style.color = 'var(--muted)';
+    } else {
+      const leaders = REGIONS.filter(r => (data.overall[r.id] || 0) === overall.top);
+      champ.textContent = leaders.length > 1
+        ? leaders.map(r => r.name.replace(' Region','')).join(' / ') + ' — tied'
+        : leaders[0].name;
+      champ.style.color = leaders.length > 1 ? 'var(--gold-bright)' : leaders[0].color;
+    }
+
+    $('updatedAt').textContent = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  }
+
+  /* ---------- network ---------- */
+  async function loadResults(){
+    try {
+      const res = await fetch('/api/results', { cache:'no-store' });
+      if (!res.ok) throw new Error('results ' + res.status);
+      renderResults(await res.json());
+    } catch (e) {
+      $('updatedAt').textContent = 'unavailable';
+    }
+  }
+
+  async function loadMyBallot(){
+    try {
+      const res = await fetch('/api/vote?token=' + encodeURIComponent(TOKEN), { cache:'no-store' });
+      if (!res.ok) return;
+      const data = await res.json();
+      (data.voted || []).forEach(v => lockAward(v.award, v.region));
+      if (data.votingClosed) {
+        $('submitBtn').disabled = true;
+        $('submitBtn').textContent = 'Voting Closed';
+        say('Voting has closed — results below are final.');
+      }
+      if (locked.size) say(locked.size === AWARDS.length
+        ? 'Your ballot is in. Thanks for voting!'
+        : 'Welcome back — your earlier picks are locked in.');
+      updateProgress();
+    } catch (e) {}
+  }
+
+  async function submitBallot(){
+    const pending = {};
+    AWARDS.forEach(a => { if (!locked.has(a.id) && picks[a.id]) pending[a.id] = picks[a.id]; });
+    if (Object.keys(pending).length === 0) return;
+
+    const btn = $('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    say('');
+
+    try {
+      const res = await fetch('/api/vote', {
+        method:'POST',
+        headers:{ 'content-type':'application/json' },
+        body: JSON.stringify({ token: TOKEN, votes: pending })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        const messages = {
+          voting_closed:'Voting has closed.',
+          rate_limited:'Too many ballots from this network. Grab an organiser.',
+          no_database:'The vote database isn’t connected yet.'
+        };
+        say(messages[data.error] || (data.message || 'Something went wrong. Try again.'), true);
+        updateProgress();
+        return;
+      }
+
+      Object.entries(pending).forEach(([award, region]) => lockAward(award, region));
+      renderResults(data);
+      updateProgress();
+      celebrate();
+      say(locked.size === AWARDS.length
+        ? 'Ballot submitted. Thanks for voting — here are the live numbers.'
+        : 'Recorded. You can still vote in the remaining categories.');
+      setTimeout(() => $('results').scrollIntoView({ behavior:'smooth', block:'start' }), 450);
+    } catch (e) {
+      say('Network problem — check your connection and try again.', true);
+      updateProgress();
+    }
+  }
+
+  /* ---------- confetti ---------- */
+  function celebrate(){
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const flash = $('flash');
+    flash.classList.remove('go');
+    void flash.offsetWidth;
+    flash.classList.add('go');
+
+    const canvas = $('confetti');
+    const ctx = canvas.getContext('2d');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = innerWidth * dpr;
+    canvas.height = innerHeight * dpr;
+    canvas.style.width = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+    ctx.scale(dpr, dpr);
+
+    const colors = ['#ffeab0','#e8c469','#a8781f','#fff6dd','#f5a623'];
+    const bits = Array.from({ length: 150 }, () => ({
+      x: innerWidth / 2 + (Math.random() - .5) * innerWidth * .7,
+      y: -20 - Math.random() * innerHeight * .5,
+      w: 5 + Math.random() * 7,
+      h: 8 + Math.random() * 12,
+      vx: (Math.random() - .5) * 2.4,
+      vy: 2 + Math.random() * 4,
+      spin: (Math.random() - .5) * .3,
+      rot: Math.random() * Math.PI,
+      color: colors[(Math.random() * colors.length) | 0]
+    }));
+
+    const started = performance.now();
+    (function frame(now){
+      const elapsed = now - started;
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      bits.forEach(b => {
+        b.x += b.vx; b.y += b.vy; b.rot += b.spin; b.vy += .035;
+        ctx.save();
+        ctx.translate(b.x, b.y);
+        ctx.rotate(b.rot);
+        ctx.globalAlpha = Math.max(0, 1 - elapsed / 4200);
+        ctx.fillStyle = b.color;
+        ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h);
+        ctx.restore();
+      });
+      if (elapsed < 4200) requestAnimationFrame(frame);
+      else ctx.clearRect(0, 0, innerWidth, innerHeight);
+    })(started);
+  }
+
+  /* ---------- go ---------- */
+  buildCards();
+  buildResultBlocks();
+  updateProgress();
+  loadMyBallot();
+  loadResults();
+  $('submitBtn').addEventListener('click', submitBallot);
+
+  let timer = setInterval(loadResults, POLL_MS);
+  document.addEventListener('visibilitychange', () => {
+    clearInterval(timer);
+    if (!document.hidden) { loadResults(); timer = setInterval(loadResults, POLL_MS); }
+  });
+})();
+</script>
+</body>
+</html>
