@@ -276,17 +276,37 @@ works too. Worth telling organisers in advance; it's the one question likely to 
 
 ### `VOTING_CLOSED` — freezing the result
 
-Set it to exactly `1` (not `true`, not `yes`). Then:
+**This now lives in `wrangler.jsonc`, not the dashboard.** To close voting:
+
+1. Open `wrangler.jsonc`, change `"VOTING_CLOSED": "0"` to `"1"`
+2. Commit and push
+
+**Rehearsed end to end on 2026-08-13. It takes about 40–45 seconds** from `git push`
+to the switch actually taking effect. Allow two minutes on the night and verify before
+you announce anything.
+
+Do **not** trust the deployments list to tell you it is done — a deployment record
+appears within ~3 seconds of the push, while the build is still running. The only
+reliable signal is the API itself:
+
+```bash
+curl -s https://campezekielawards.fifusayya.org/api/results | grep -o '"votingClosed":[a-z]*'
+```
+
+When that reads `"votingClosed":true`, it is genuinely closed. Reopening is the same
+edit in reverse and takes about as long.
+
+Once set, then:
 
 - `POST /api/vote` returns 403 and records nothing.
 - The ballot page's submit button reads **"Voting Closed"** and is disabled.
 - Results stay fully visible and the leaderboard keeps working — the numbers just stop
   moving. Use it when you announce the winners so nobody can vote after the reveal.
 
-One wrinkle: a page that was **already open** when you flip the switch still shows an
-active button, because the closed state is read on page load. Clicking it fails
-cleanly with "Voting has closed." rather than doing anything, and a refresh shows the
-correct state. Nobody can sneak a late vote in — they just find out a moment later.
+A page that was **already open** when you flip the switch still shows an active button,
+because the closed state is read on page load. Clicking it fails cleanly, latches the
+closed state, and the button settles into "Voting Closed". Nobody can sneak a late vote
+in — they just find out a moment later.
 
 ## Replacing `share.jpg`
 
