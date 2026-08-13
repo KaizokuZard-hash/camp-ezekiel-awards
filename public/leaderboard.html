@@ -79,12 +79,62 @@ h1{font-family:var(--display);font-weight:800;margin:0 0 6px;line-height:1;
 .score b{display:block;font-family:var(--display);font-weight:800;font-size:clamp(1.2rem,3vw,2.4rem);line-height:1}
 .score span{font-size:clamp(.6rem,1.1vw,.78rem);color:var(--muted);letter-spacing:.1em}
 
-.bottom{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:12px;
-  padding:16px;border-top:1px solid var(--line-soft)}
-.pips{display:flex;gap:9px}
-.pips i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.18);transition:background .3s,transform .3s}
-.pips i.on{background:var(--gold);transform:scale(1.35);box-shadow:0 0 10px var(--gold)}
-.hint{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-left:14px}
+.bottom{
+  position:relative;z-index:2;display:flex;align-items:center;justify-content:center;
+  gap:clamp(8px,2vw,16px);flex-wrap:wrap;
+  padding:14px clamp(12px,3vw,24px) calc(14px + env(safe-area-inset-bottom));
+  border-top:1px solid var(--line-soft);
+}
+
+/* Touch controls. The projector has a keyboard; a phone does not. */
+.ctrl{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-width:44px;min-height:44px;padding:0 16px;
+  border-radius:999px;cursor:pointer;
+  border:1px solid var(--line);background:rgba(255,255,255,.04);
+  color:var(--gold);font-family:var(--ui);font-weight:700;
+  font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+  transition:background .18s,transform .18s,color .18s;
+  -webkit-tap-highlight-color:transparent;
+}
+.ctrl:hover{background:rgba(232,196,105,.12);color:var(--gold-bright)}
+.ctrl:active{transform:scale(.95)}
+.ctrl:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
+.ctrl svg{width:14px;height:14px;fill:currentColor}
+.ctrl[aria-pressed="true"]{background:rgba(232,196,105,.18);color:var(--gold-bright);border-color:var(--gold)}
+
+/* Pips are real buttons now — tap one to jump straight to that award. */
+.pips{display:flex;gap:4px;align-items:center}
+.pips button{
+  width:28px;min-height:44px;padding:0;border:0;background:none;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.pips button i{
+  display:block;width:9px;height:9px;border-radius:50%;
+  background:rgba(255,255,255,.20);transition:background .3s,transform .3s;
+}
+.pips button[aria-current="true"] i{background:var(--gold);transform:scale(1.45);box-shadow:0 0 10px var(--gold)}
+.pips button:hover i{background:var(--gold-bright)}
+.pips button:focus-visible{outline:2px solid var(--gold-bright);outline-offset:-4px;border-radius:8px}
+
+.hint{font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+/* Keyboard hints are noise on a touch device. */
+@media(hover:none),(max-width:720px){ .hint{display:none} }
+
+/* On a phone the slide must fit without the controls being pushed off-screen. */
+@media(max-width:720px){
+  body{overflow:auto}
+  main{justify-content:flex-start;padding-top:18px}
+  .ctrl{padding:0 13px;font-size:.66rem}
+  .ctrl .label{display:none}
+  .ctrl svg{width:16px;height:16px}
+  .ctrl.play .label{display:inline}
+  /* 28px is a tall-but-thin target; give thumbs the full 44px both ways.
+     The row wraps onto its own line at this width, which is fine. */
+  .pips button{width:44px}
+  .pips{gap:0}
+}
 @media(prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
 </style>
 </head>
@@ -100,8 +150,24 @@ h1{font-family:var(--display);font-weight:800;margin:0 0 6px;line-height:1;
 <main><div class="slide" id="slide"></div></main>
 
 <div class="bottom">
-  <div class="pips" id="pips"></div>
-  <span class="hint">Press &rarr; or &larr; to change · Space to hold</span>
+  <button class="ctrl" type="button" id="prevBtn" aria-label="Previous award">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 4.6 8 12l7.4 7.4 1.6-1.6L11 12l6-5.8z"/></svg>
+    <span class="label">Prev</span>
+  </button>
+
+  <div class="pips" id="pips" role="group" aria-label="Jump to an award"></div>
+
+  <button class="ctrl play" type="button" id="playBtn" aria-pressed="false" aria-label="Pause auto-rotation">
+    <svg viewBox="0 0 24 24" aria-hidden="true" id="playIcon"><path d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>
+    <span class="label" id="playLabel">Pause</span>
+  </button>
+
+  <button class="ctrl" type="button" id="nextBtn" aria-label="Next award">
+    <span class="label">Next</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 4.6 16 12l-7.4 7.4L7 17.8 13 12 7 6.2z"/></svg>
+  </button>
+
+  <span class="hint">&larr; &rarr; to change · Space to hold</span>
 </div>
 
 <script>
@@ -134,7 +200,18 @@ h1{font-family:var(--display);font-weight:800;margin:0 0 6px;line-height:1;
 
   const $ = (id) => document.getElementById(id);
 
-  $('pips').innerHTML = AWARDS.map(() => '<i></i>').join('');
+  // Each pip is a button so a phone can jump straight to an award.
+  $('pips').innerHTML = AWARDS.map((a, i) => `
+    <button type="button" data-index="${i}" aria-current="false"
+            aria-label="Show ${a.title}"><i></i></button>`).join('');
+
+  $('pips').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-index]');
+    if (!btn) return;
+    index = Number(btn.dataset.index);
+    render();
+    restartRotation();
+  });
 
   function countsFor(awardId){
     if (!data) return {};
@@ -174,7 +251,8 @@ h1{font-family:var(--display);font-weight:800;margin:0 0 6px;line-height:1;
     void $('slide').offsetWidth;
     $('slide').style.animation = '';
 
-    [...$('pips').children].forEach((pip, i) => pip.classList.toggle('on', i === index));
+    [...$('pips').children].forEach((pip, i) =>
+      pip.setAttribute('aria-current', String(i === index)));
     $('ballots').textContent = (data && data.ballots || 0).toLocaleString();
   }
 
@@ -198,15 +276,42 @@ h1{font-family:var(--display);font-weight:800;margin:0 0 6px;line-height:1;
     } catch (e) {}
   }
 
+  const PLAY_ICON  = '<path d="M8 5v14l11-7z"/>';
+  const PAUSE_ICON = '<path d="M7 5h4v14H7zm6 0h4v14h-4z"/>';
+
+  function setPaused(next){
+    paused = next;
+    $('playIcon').innerHTML = paused ? PLAY_ICON : PAUSE_ICON;
+    $('playLabel').textContent = paused ? 'Play' : 'Pause';
+    $('playBtn').setAttribute('aria-pressed', String(paused));
+    $('playBtn').setAttribute('aria-label', paused ? 'Resume auto-rotation' : 'Pause auto-rotation');
+    restartRotation();
+  }
+
+  $('prevBtn').addEventListener('click', () => go(-1));
+  $('nextBtn').addEventListener('click', () => go(1));
+  $('playBtn').addEventListener('click', () => setPaused(!paused));
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
     else if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
-    else if (e.code === 'Space') {
-      e.preventDefault();
-      paused = !paused;
-      restartRotation();
-    }
+    else if (e.code === 'Space') { e.preventDefault(); setPaused(!paused); }
   });
+
+  // Swipe left/right on touch. Ignores mostly-vertical drags so scrolling still works.
+  let touchX = null, touchY = null;
+  const SWIPE_MIN = 45;
+  document.addEventListener('touchstart', (e) => {
+    touchX = e.changedTouches[0].clientX;
+    touchY = e.changedTouches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    const dy = e.changedTouches[0].clientY - touchY;
+    if (Math.abs(dx) > SWIPE_MIN && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? 1 : -1);
+    touchX = touchY = null;
+  }, { passive: true });
 
   render();
   poll();
