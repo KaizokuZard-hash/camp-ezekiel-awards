@@ -28,6 +28,14 @@ awards, with a live vote counter. Sibling project to the main camp site at
 ## Voting rules (decided by the owner)
 
 - Fully anonymous: no name, no email, no login.
+- **Voters declare the region they represent, and cannot vote for it.** Enforced client
+  *and* server side; `homeRegion` is required by `POST /api/vote`.
+- **The declared region is fixed once any vote is recorded.** Without this, a partial
+  ballot could switch region to unlock the one it was blocked from — letting someone
+  vote for their own region in the remaining categories.
+- Accepted limit: the browser is the only thing pinning a ballot to one region. Making
+  that airtight needs region stored against the ballot token, which would enable
+  "how did region X vote" — rejected deliberately. Owner confirmed this trade-off.
 - **One ballot per device, one vote per award.** Enforced by
   `UNIQUE INDEX votes_ballot_award ON votes (ballot_token, award)` — the DB, not the UI.
 - Ballot token = `crypto.randomUUID()` in `localStorage` under `ce_awards_ballot_v1`.

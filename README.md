@@ -22,6 +22,39 @@ the build output directory is the only reliable way to avoid serving them.
 | `functions/_shared.js` | Award/region lists, IP hashing, result shaping. |
 | `schema.sql` | The D1 table + indexes. |
 
+## Organiser turnout metrics
+
+`GET /api/admin/turnout` reports **how many people from each region voted**. It is
+gated on an `ADMIN_KEY` secret and returns a plain `404` for a wrong key, a missing
+key, or when no key is configured — so probing reveals nothing.
+
+Set the key (you type the value; it is never echoed):
+
+```bash
+npx wrangler pages secret put ADMIN_KEY --project-name camp-ezekiel-awards
+```
+
+Then **push any commit** — a secret does not reach the running deployment until a
+deploy happens after it is set. Read it with the key in a header rather than the URL,
+so it stays out of browser history and proxy logs:
+
+```bash
+curl -s -H "Authorization: Bearer YOUR_KEY" https://campezekielawards.fifusayya.org/api/admin/turnout
+```
+
+### Why this cannot leak how anyone voted
+
+Turnout lives in its own `turnout` table holding **`region` and `created_at` only** —
+no ballot token, no vote data. Putting the voter's region on the vote rows would have
+made "how did West Region vote?" answerable, which at small numbers identifies people.
+The separation means these metrics can report *how many* voted from each region and
+are structurally incapable of reporting *how they voted*, even if the key leaks.
+
+**Do not add a token column to that table.**
+
+`undeclaredVoters` counts ballots recorded without a declared region — only possible
+for ballots cast before this feature shipped. It should stay at 0.
+
 ## Adding photos
 
 The photo section ships with placeholders. To put real pictures in:
