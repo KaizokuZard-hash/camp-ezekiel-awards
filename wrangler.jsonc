@@ -23,7 +23,7 @@
   // exactly when voting closed — and it can't hit the "secret set but not deployed"
   // trap, because the value ships as part of the deployment itself.
   "vars": {
-    "VOTING_CLOSED": "1"
+    "VOTING_CLOSED": "0"
   },
 
   "d1_databases": [
