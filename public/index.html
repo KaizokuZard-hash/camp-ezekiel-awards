@@ -98,8 +98,13 @@ nav{
 nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:62px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.14em;font-size:.7rem;text-transform:uppercase;color:var(--gold)}
 .brand svg{width:20px;height:20px;flex:none}
-.nav-links{display:flex;gap:22px;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
-.nav-links a{color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links{display:flex;gap:10px;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+/* Padding, not font size, does the work here: the text stays small but the tap
+   target clears the ~44px minimum. Almost everyone votes on a phone. */
+.nav-links a{
+  color:var(--muted);text-decoration:none;transition:color .2s;
+  display:inline-flex;align-items:center;min-height:44px;padding:0 8px;border-radius:8px;
+}
 .nav-links a:hover,.nav-links a:focus-visible{color:var(--gold-bright)}
 @media(max-width:640px){.nav-links{gap:14px;font-size:.68rem}.brand span{display:none}}
 
@@ -265,8 +270,8 @@ legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)
   .progress{min-width:0;gap:5px}
   .progress-label{font-size:.72rem}
   .track{max-width:none}
-  .ballot-bar .btn{padding:12px 18px;font-size:.76rem;letter-spacing:.08em}
-  .ballot-bar .btn.ghost{padding:11px 14px;font-size:.7rem}
+  .ballot-bar .btn{padding:12px 18px;font-size:.76rem;letter-spacing:.08em;min-height:44px}
+  .ballot-bar .btn.ghost{padding:11px 14px;font-size:.7rem;min-height:44px}
   .msg{font-size:.78rem;line-height:1.4}
 }
 

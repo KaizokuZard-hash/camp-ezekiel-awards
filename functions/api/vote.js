@@ -106,7 +106,10 @@ export async function onRequestPost({ request, env }) {
     );
     recorded = results.reduce((sum, r) => sum + (r.meta?.changes || 0), 0);
   } catch (err) {
-    return json({ error: 'insert_failed', message: String(err) }, 500);
+    // Log the real error for `wrangler pages deployment tail`, but never echo internal
+    // detail (SQL text, schema names) back to the caller.
+    console.error('vote insert failed:', err);
+    return json({ error: 'insert_failed', message: 'Could not record your vote.' }, 500);
   }
 
   // Hand back fresh tallies so the page can reveal results without a second round trip.

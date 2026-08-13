@@ -21,6 +21,8 @@ export async function onRequestGet({ env }) {
       ...shapeResults(tally.results || [], ballots?.n || 0),
     });
   } catch (err) {
-    return json({ error: 'query_failed', message: String(err) }, 500);
+    // Logged for `wrangler pages deployment tail`; not exposed to the caller.
+    console.error('results query failed:', err);
+    return json({ error: 'query_failed', message: 'Could not load results.' }, 500);
   }
 }
