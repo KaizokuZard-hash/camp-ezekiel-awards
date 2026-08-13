@@ -149,8 +149,11 @@ h1{font-family:var(--display);font-weight:800;margin:0 0 6px;line-height:1;
   .ctrl .label{display:none}
   .ctrl svg{width:16px;height:16px}
   .ctrl.play .label{display:inline}
-  /* 28px is a tall-but-thin target; give thumbs the full 44px both ways.
-     The row wraps onto its own line at this width, which is fine. */
+}
+
+/* 28px is a tall-but-thin target. Any touch device gets the full 44px both ways —
+   keyed off pointer type as well as width, so a touch tablet isn't missed. */
+@media(hover:none),(max-width:720px){
   .pips button{width:44px}
   .pips{gap:0}
 }
