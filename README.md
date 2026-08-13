@@ -163,6 +163,18 @@ the Cloudflare dashboard makes that attack impossible without the salt.
 - **Set it before the first real vote.** Changing the salt later doesn't break the
   site, but every existing row keeps its old hash, so the per-network counts start
   from scratch and old and new ballots stop matching each other.
+- **Setting the secret is not enough — you must deploy afterwards.** Verified the hard
+  way on 2026-08-12: with `VOTE_SALT` showing as set in `wrangler pages secret list`,
+  the running deployment was still hashing with the public fallback salt. Only a
+  deployment created *after* the secret existed picked it up.
+
+To confirm a salt is genuinely live rather than trusting the dashboard: cast a vote,
+note `substr(ip_hash,1,16)`, then cast another from the same network after any salt
+change. The hash must differ.
+
+```sql
+SELECT id, substr(ip_hash,1,16) AS hash_start FROM votes ORDER BY id DESC LIMIT 5;
+```
 
 ### `MAX_VOTES_PER_IP` — sharing a network is fine
 
