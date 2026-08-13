@@ -364,6 +364,84 @@ legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)
 }
 .photo-empty p{margin:0;font-size:.9rem}
 
+/* ---------- home-region gate ---------- */
+.gate{
+  position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;
+  padding:clamp(16px,4vw,32px);overflow-y:auto;
+  background:rgba(6,4,10,.95);backdrop-filter:blur(8px);
+}
+.gate.hidden{display:none}
+.gate-card{
+  width:100%;max-width:560px;margin:auto;text-align:center;
+  border:1px solid var(--line);border-radius:20px;padding:clamp(24px,5vw,34px) clamp(20px,4vw,28px);
+  background:radial-gradient(120% 150% at 50% 0%,rgba(232,196,105,.12),rgba(255,255,255,.02));
+  box-shadow:0 40px 100px -40px #000;
+}
+.gate-card h2{
+  font-family:var(--display);font-weight:700;color:var(--gold-bright);
+  font-size:clamp(1.5rem,5vw,2.2rem);margin:0 0 12px;line-height:1.1;
+}
+.gate-card > p{color:var(--muted);margin:0 auto 6px;max-width:46ch;font-size:.95rem}
+.gate-regions{display:grid;gap:10px;margin:22px 0 18px}
+.gate-regions button{
+  --c:var(--gold);
+  display:flex;align-items:center;gap:12px;width:100%;min-height:52px;
+  padding:14px 16px;border-radius:12px;cursor:pointer;text-align:left;
+  border:1px solid var(--line-soft);background:rgba(255,255,255,.03);
+  color:var(--text);font-family:var(--ui);font-weight:600;font-size:.95rem;
+  transition:background .18s,border-color .18s,transform .18s;
+}
+.gate-regions button:hover{background:var(--card-hi);border-color:var(--c);transform:translateY(-1px)}
+.gate-regions button:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
+.gate-regions .pip{width:13px;height:13px;border-radius:50%;border:2px solid var(--c);flex:none}
+.gate-foot{font-size:.8rem;color:var(--muted);margin:0}
+.gate-foot strong{color:var(--text);font-weight:600}
+
+/* The voter's own region, locked out in every category. */
+.regions input:disabled + .region.is-home{opacity:.55;cursor:not-allowed}
+.region .home-tag{
+  margin-left:auto;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);border:1px solid var(--line);border-radius:999px;padding:3px 8px;white-space:nowrap;
+}
+/* Deliberately large. This is the one thing a voter must register before they
+   submit, because the first submission locks the choice for good. */
+.home-banner{
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  border:1px solid var(--line);border-radius:16px;
+  padding:18px 20px;margin-bottom:26px;
+  background:linear-gradient(90deg,
+    color-mix(in srgb,var(--c,var(--gold)) 13%,transparent),
+    rgba(255,255,255,.02) 60%);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c,var(--gold)) 24%,transparent);
+}
+.home-banner .flag{
+  width:12px;height:46px;border-radius:6px;flex:none;
+  background:var(--c,var(--gold));box-shadow:0 0 18px -2px var(--c,var(--gold));
+}
+.home-banner .who{flex:1;min-width:190px}
+.home-banner .who-kicker{
+  display:block;font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--muted);font-weight:700;margin-bottom:4px;
+}
+.home-banner b{
+  display:block;font-family:var(--display);font-weight:700;line-height:1.08;
+  font-size:clamp(1.3rem,4.6vw,1.8rem);color:var(--c,var(--gold-bright));
+}
+.home-banner .note{display:block;font-size:.84rem;color:var(--muted);margin-top:5px}
+.home-banner button{
+  flex:none;min-height:44px;padding:0 18px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--line);background:rgba(255,255,255,.05);
+  color:var(--gold);font-family:var(--ui);font-weight:700;
+  font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+  transition:background .18s,color .18s;
+}
+.home-banner button:hover{background:rgba(232,196,105,.14);color:var(--gold-bright)}
+.home-banner button:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
+@media(max-width:520px){
+  .home-banner{padding:16px}
+  .home-banner button{width:100%}
+}
+
 .lightbox{
   position:fixed;inset:0;z-index:70;display:none;
   align-items:center;justify-content:center;padding:clamp(16px,4vw,44px);
@@ -514,8 +592,20 @@ footer a:hover{text-decoration:underline}
          wasn't yours</em>. <strong>Nobody sees your ballot</strong> — no name, no login,
          nothing that traces back to you. There is nobody to impress and nothing to
          defend, so pick what actually deserves it.</p>
-      <p>You can absolutely vote for your own region. Just make sure they earned it.</p>
+      <p>That's why <strong>your own region is greyed out</strong>. You're judging the
+         other four — which is the only way this measures the camps rather than who
+         brought the biggest crowd.</p>
       <a class="peek" href="#photos">See what the other four regions pulled off first &rarr;</a>
+    </div>
+
+    <div class="home-banner hidden" id="homeBanner">
+      <span class="flag" aria-hidden="true"></span>
+      <span class="who">
+        <span class="who-kicker">You're repping</span>
+        <b id="homeName">—</b>
+        <span class="note" id="homeNote">Your region is greyed out — you're voting for the other four.</span>
+      </span>
+      <button type="button" id="changeHome">Change</button>
     </div>
 
     <form id="ballotForm">
@@ -583,6 +673,20 @@ footer a:hover{text-decoration:underline}
   </div>
 </section>
 
+<div class="gate hidden" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="gate-card">
+    <div class="kicker" style="margin-bottom:14px">Before you vote</div>
+    <h2 id="gateTitle">Which region are you repping?</h2>
+    <p>You'll vote in all four categories — just not for your own camp.
+       These awards are about what everyone <em>else</em> pulled off.</p>
+    <div class="gate-regions" id="gateRegions"></div>
+    <p class="gate-foot">
+      <strong>This stays on your device.</strong> It is used to grey out your own region
+      and is never stored with your votes.
+    </p>
+  </div>
+</div>
+
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
   <button class="close" type="button" id="lightboxClose" aria-label="Close photo">&#10005;</button>
   <img id="lightboxImg" alt="">
@@ -648,12 +752,14 @@ footer a:hover{text-decoration:underline}
 
   const REGION_BY_ID = Object.fromEntries(REGIONS.map(r => [r.id, r]));
   const TOKEN_KEY = 'ce_awards_ballot_v1';
+  const HOME_KEY  = 'ce_awards_home_region_v1';
   const POLL_MS = 7000;
 
   const $ = (id) => document.getElementById(id);
   const picks = {};          // award id -> region id, this session's unsubmitted choices
   const locked = new Set();  // award ids already recorded on the server
   let votingClosed = false;  // set from the server; overrides all button states
+  let homeRegion = null;     // the voter's own region — locked out of every category
 
   /* ---------- anonymous ballot token ---------- */
   function ballotToken(){
@@ -718,6 +824,9 @@ footer a:hover{text-decoration:underline}
   }
 
   function updateProgress(){
+    // Keeps the "change region" control in step with whether anything is submitted.
+    refreshHomeBanner();
+
     const open = AWARDS.filter(a => !locked.has(a.id));
     const chosen = open.filter(a => picks[a.id]).length;
     const done = locked.size;
@@ -884,7 +993,8 @@ footer a:hover{text-decoration:underline}
       const res = await fetch('/api/vote', {
         method:'POST',
         headers:{ 'content-type':'application/json' },
-        body: JSON.stringify({ token: TOKEN, votes: pending })
+        // homeRegion is validated server-side and deliberately not stored.
+        body: JSON.stringify({ token: TOKEN, votes: pending, homeRegion })
       });
       const data = await res.json();
 
@@ -892,6 +1002,8 @@ footer a:hover{text-decoration:underline}
         const messages = {
           voting_closed:'Voting has closed — results below are final.',
           rate_limited:'Too many ballots from this network. Grab an organiser.',
+          own_region:'You can’t vote for your own region — that’s the whole idea.',
+          home_region_required:'Pick the region you’re repping first.',
           no_database:'The vote database isn’t connected yet.'
         };
         // If voting closed while this page sat open, latch it so the button
@@ -914,6 +1026,116 @@ footer a:hover{text-decoration:underline}
       say('Network problem — check your connection and try again.', true);
       updateProgress();
     }
+  }
+
+  /* ---------- home region ----------
+     The voter names the region they're repping, and it is locked out of every
+     category. Stored only in this browser and sent with the ballot for validation —
+     the server checks it and throws it away, so no vote row ever records where the
+     voter is from. That keeps the anonymity promise intact. */
+  function loadHome(){
+    try {
+      const saved = localStorage.getItem(HOME_KEY);
+      if (saved && REGION_BY_ID[saved]) homeRegion = saved;
+    } catch (e) {}
+  }
+
+  function buildGate(){
+    $('gateRegions').innerHTML = REGIONS.map(r => `
+      <button type="button" data-region="${r.id}" style="--c:${r.color}">
+        <span class="pip" aria-hidden="true"></span>${r.name}
+      </button>`).join('');
+
+    $('gateRegions').addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-region]');
+      if (btn) setHome(btn.dataset.region);
+    });
+
+    $('changeHome').addEventListener('click', () => openGate());
+  }
+
+  function openGate(){
+    // Belt and braces: even if something calls this, a ballot in progress can't
+    // change region.
+    if (regionIsFixed()) return;
+    $('gate').classList.remove('hidden');
+    // Focus the dialog itself, not the first region. Focusing a region button means
+    // a stray Enter or Space silently locks the voter out of that region — a real
+    // hazard for a choice that removes one of their voting options.
+    const card = $('gate').querySelector('.gate-card');
+    if (card) { card.setAttribute('tabindex', '-1'); card.focus(); }
+  }
+
+  function setHome(regionId){
+    if (!REGION_BY_ID[regionId] || regionIsFixed()) return;
+    homeRegion = regionId;
+    try { localStorage.setItem(HOME_KEY, regionId); } catch (e) {}
+    $('gate').classList.add('hidden');
+    applyHomeLock();
+  }
+
+  // Once any vote is recorded the region is fixed for this ballot. Otherwise a voter
+  // could submit part of a ballot, switch region to unlock the one they were blocked
+  // from, and end up voting for their own camp in the remaining categories.
+  function regionIsFixed(){
+    return locked.size > 0;
+  }
+
+  function refreshHomeBanner(){
+    const region = REGION_BY_ID[homeRegion];
+    $('homeBanner').classList.toggle('hidden', !region);
+    if (!region) return;
+
+    $('homeName').textContent = region.name;
+    $('homeBanner').style.setProperty('--c', region.color);
+
+    const fixed = regionIsFixed();
+    $('changeHome').classList.toggle('hidden', fixed);
+    $('homeNote').textContent = fixed
+      ? 'Locked in for this ballot — this can’t be changed now.'
+      : 'Your region is greyed out — you’re voting for the other four. You can change this until you submit.';
+  }
+
+  // Grey out the home region everywhere, and clear any pick that is now invalid.
+  function applyHomeLock(){
+    refreshHomeBanner();
+
+    AWARDS.forEach(award => {
+      REGIONS.forEach(r => {
+        const input = document.getElementById(award.id + '-' + r.id);
+        const label = input && input.parentNode.querySelector(`label[for="${input.id}"]`);
+        if (!input || !label) return;
+
+        const isHome = !!homeRegion && r.id === homeRegion;
+        label.classList.toggle('is-home', isHome);
+
+        let tag = label.querySelector('.home-tag');
+        if (isHome && !tag) {
+          tag = document.createElement('span');
+          tag.className = 'home-tag';
+          tag.textContent = 'Your region';
+          label.appendChild(tag);
+        } else if (!isHome && tag) {
+          tag.remove();
+        }
+
+        // Never re-enable a category already submitted.
+        if (locked.has(award.id)) return;
+
+        if (isHome) {
+          input.disabled = true;
+          if (input.checked) {
+            input.checked = false;
+            delete picks[award.id];
+            $('card-' + award.id).classList.remove('has-pick');
+          }
+        } else {
+          input.disabled = false;
+        }
+      });
+    });
+
+    updateProgress();
   }
 
   /* ---------- photo gallery ---------- */
@@ -1071,11 +1293,15 @@ footer a:hover{text-decoration:underline}
 
   /* ---------- go ---------- */
   buildCards();
+  buildGate();
+  loadHome();
+  applyHomeLock();
   buildRegionTabs();
   showRegion(currentRegion);
   buildResultBlocks();
   updateProgress();
-  loadMyBallot();
+  // Ask for the home region only once it's clear voting is actually open.
+  loadMyBallot().then(() => { if (!homeRegion && !votingClosed) openGate(); });
   loadResults();
   $('submitBtn').addEventListener('click', submitBallot);
 

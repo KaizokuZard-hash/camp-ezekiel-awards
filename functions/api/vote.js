@@ -43,7 +43,7 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'bad_json' }, 400);
   }
 
-  const { token, votes } = body || {};
+  const { token, votes, homeRegion } = body || {};
   if (!isValidToken(token)) {
     return json({ error: 'bad_token', message: 'Missing or malformed ballot token.' }, 400);
   }
@@ -64,6 +64,31 @@ export async function onRequestPost({ request, env }) {
   }
   if (picks.length === 0) {
     return json({ error: 'empty_ballot', message: 'Pick at least one award.' }, 400);
+  }
+
+  // The voter's own region. Required — if it were optional, omitting it would be a
+  // one-line way to vote for anybody, and the rule would mean nothing.
+  //
+  // Enforced here so it doesn't depend on the UI. It remains honour-system at the
+  // edges: nothing stops someone naming a region that isn't theirs, and the browser
+  // is the only thing pinning a ballot to one declared region. Closing that properly
+  // means storing region against the ballot token, which would make "how did West
+  // Region vote" answerable — the exact correlation this design avoids.
+  if (typeof homeRegion !== 'string' || !REGIONS.includes(homeRegion)) {
+    return json({
+      error: 'home_region_required',
+      message: 'Tell us which region you represent before voting.',
+    }, 400);
+  }
+  const home = homeRegion;
+
+  const ownVote = picks.find(([, region]) => region === home);
+  if (ownVote) {
+    return json({
+      error: 'own_region',
+      message: 'You cannot vote for your own region.',
+      award: ownVote[0],
+    }, 400);
   }
 
   const ipHash = await hashIp(request, env);
@@ -99,12 +124,25 @@ export async function onRequestPost({ request, env }) {
     'INSERT OR IGNORE INTO votes (ballot_token, award, region, ip_hash) VALUES (?, ?, ?, ?)'
   );
 
+  // Is this the ballot's first vote? Decides whether it counts toward turnout.
+  const priorVotes = await env.DB.prepare(
+    'SELECT COUNT(*) AS n FROM votes WHERE ballot_token = ?'
+  ).bind(token).first();
+  const isFirstSubmission = (priorVotes?.n || 0) === 0;
+
   let recorded = 0;
   try {
     const results = await env.DB.batch(
       picks.map(([award, region]) => statement.bind(token, award, region, ipHash))
     );
     recorded = results.reduce((sum, r) => sum + (r.meta?.changes || 0), 0);
+
+    // Turnout is recorded in its own table with NO ballot token and NO vote data —
+    // deliberately impossible to join back to how this person voted. It answers
+    // "how many voted from each region" and nothing else.
+    if (isFirstSubmission && recorded > 0 && home) {
+      await env.DB.prepare('INSERT INTO turnout (region) VALUES (?)').bind(home).run();
+    }
   } catch (err) {
     // Log the real error for `wrangler pages deployment tail`, but never echo internal
     // detail (SQL text, schema names) back to the caller.

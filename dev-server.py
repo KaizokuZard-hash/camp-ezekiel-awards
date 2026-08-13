@@ -27,6 +27,9 @@ PORT = 4321
 AWARDS = ["fomo", "stealing", "cook", "runback"]
 REGIONS = ["south", "midwest", "northeast", "southeast", "west"]
 
+# Local-preview only. Production reads the ADMIN_KEY secret instead.
+LOCAL_ADMIN_KEY = "preview"
+
 db = sqlite3.connect(":memory:", check_same_thread=False)
 with open(os.path.join(REPO, "schema.sql"), encoding="utf-8") as fh:
     db.executescript(fh.read())
@@ -74,6 +77,33 @@ class Handler(SimpleHTTPRequestHandler):
         if path == "/api/results":
             return self._json({"ok": True, **shape()})
 
+        if path == "/api/admin/turnout":
+            # Local preview key. Production uses the ADMIN_KEY secret.
+            key = (parse_qs(urlparse(self.path).query).get("key") or [""])[0]
+            auth = self.headers.get("Authorization", "")
+            if auth.lower().startswith("bearer "):
+                key = auth[7:].strip()
+            if key != LOCAL_ADMIN_KEY:
+                self.send_response(404)
+                self.end_headers()
+                self.wfile.write(b"Not found")
+                return
+            rows = db.execute(
+                "SELECT region, COUNT(*) FROM turnout GROUP BY region"
+            ).fetchall()
+            by_region = {r: 0 for r in REGIONS}
+            for region, n in rows:
+                by_region[region] = n
+            declared = sum(by_region.values())
+            ballots = db.execute(
+                "SELECT COUNT(DISTINCT ballot_token) FROM votes").fetchone()[0]
+            return self._json({
+                "ok": True, "byRegion": by_region, "declaredVoters": declared,
+                "totalBallots": ballots,
+                "undeclaredVoters": max(0, ballots - declared),
+                "note": "Turnout only. Cannot be linked to how anyone voted.",
+            })
+
         if path == "/api/vote":
             token = (parse_qs(urlparse(self.path).query).get("token") or [""])[0]
             rows = db.execute(
@@ -94,6 +124,7 @@ class Handler(SimpleHTTPRequestHandler):
         length = int(self.headers.get("content-length", 0))
         body = json.loads(self.rfile.read(length) or b"{}")
         token, votes = body.get("token"), body.get("votes") or {}
+        home = body.get("homeRegion")
 
         if not token:
             return self._json({"error": "bad_token"}, 400)
@@ -105,6 +136,21 @@ class Handler(SimpleHTTPRequestHandler):
         if not votes:
             return self._json({"error": "empty_ballot"}, 400)
 
+        if home not in REGIONS:
+            return self._json({
+                "error": "home_region_required",
+                "message": "Tell us which region you represent before voting."}, 400)
+        for award, region in votes.items():
+            if region == home:
+                return self._json({
+                    "error": "own_region",
+                    "message": "You cannot vote for your own region.",
+                    "award": award}, 400)
+
+        first_submission = db.execute(
+            "SELECT COUNT(*) FROM votes WHERE ballot_token = ?", (token,)
+        ).fetchone()[0] == 0
+
         recorded = 0
         for award, region in votes.items():
             cur = db.execute(
@@ -113,6 +159,9 @@ class Handler(SimpleHTTPRequestHandler):
                 (token, award, region, "local"),
             )
             recorded += cur.rowcount
+        # Turnout row carries no token — same separation as production.
+        if first_submission and recorded > 0 and home:
+            db.execute("INSERT INTO turnout (region) VALUES (?)", (home,))
         db.commit()
 
         return self._json({
