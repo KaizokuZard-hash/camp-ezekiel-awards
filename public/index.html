@@ -640,6 +640,7 @@ footer a:hover{text-decoration:underline}
   const $ = (id) => document.getElementById(id);
   const picks = {};          // award id -> region id, this session's unsubmitted choices
   const locked = new Set();  // award ids already recorded on the server
+  let votingClosed = false;  // set from the server; overrides all button states
 
   /* ---------- anonymous ballot token ---------- */
   function ballotToken(){
@@ -712,6 +713,17 @@ footer a:hover{text-decoration:underline}
     $('trackFill').style.width = ((done + chosen) / AWARDS.length * 100) + '%';
 
     const btn = $('submitBtn');
+
+    // Closed beats every other state. This runs after the closed-state setup and
+    // on every pick, so without this guard choosing a region would relabel and
+    // re-enable the button — inviting a submit that the server will only refuse.
+    if (votingClosed) {
+      btn.disabled = true;
+      btn.textContent = 'Voting Closed';
+      $('ballotBar').classList.add('done');
+      return;
+    }
+
     if (open.length === 0) {
       btn.disabled = true;
       btn.textContent = 'Ballot Complete';
@@ -832,12 +844,13 @@ footer a:hover{text-decoration:underline}
       if (!res.ok) return;
       const data = await res.json();
       (data.voted || []).forEach(v => lockAward(v.award, v.region));
-      if (data.votingClosed) {
-        $('submitBtn').disabled = true;
-        $('submitBtn').textContent = 'Voting Closed';
-        say('Voting has closed — results below are final.');
-      }
-      if (locked.size) say(locked.size === AWARDS.length
+
+      // updateProgress() below reads this and settles the button accordingly.
+      votingClosed = !!data.votingClosed;
+      if (votingClosed) say('Voting has closed — results below are final.');
+
+      // A closed notice outranks the welcome-back note.
+      if (locked.size && !votingClosed) say(locked.size === AWARDS.length
         ? 'Your ballot is in. Thanks for voting!'
         : 'Welcome back — your earlier picks are locked in.');
       updateProgress();
@@ -864,10 +877,13 @@ footer a:hover{text-decoration:underline}
 
       if (!res.ok) {
         const messages = {
-          voting_closed:'Voting has closed.',
+          voting_closed:'Voting has closed — results below are final.',
           rate_limited:'Too many ballots from this network. Grab an organiser.',
           no_database:'The vote database isn’t connected yet.'
         };
+        // If voting closed while this page sat open, latch it so the button
+        // settles into "Voting Closed" instead of inviting another attempt.
+        if (data.error === 'voting_closed') votingClosed = true;
         say(messages[data.error] || (data.message || 'Something went wrong. Try again.'), true);
         updateProgress();
         return;
