@@ -1,0 +1,23 @@
+{
+  // Cloudflare Pages project config.
+  //
+  // The binding MUST be named "DB" — the Functions read `env.DB`. (`wrangler d1 create`
+  // suggests `camp_ezekiel_awards`; that name would break the API.)
+  //
+  // Only `public/` is deployed. Everything else in the repo — README, CLAUDE.md,
+  // schema.sql, dev-server.py, this file — stays off the public site. Cloudflare Pages
+  // does NOT honour `.assetsignore`, so keeping non-public files out of the output
+  // directory is the only reliable way to avoid serving them.
+  //
+  // `functions/` sits beside `public/` at the repo root and becomes Pages Functions.
+  "name": "camp-ezekiel-awards",
+  "compatibility_date": "2025-01-01",
+  "pages_build_output_dir": "public",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "camp-ezekiel-awards",
+      "database_id": "5e2c37f9-8f03-4d64-857e-43fc4ef0842c"
+    }
+  ]
+}

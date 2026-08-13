@@ -6,10 +6,17 @@ one ballot per person, live results as the votes land.
 **Stack:** static HTML + Cloudflare Pages Functions + Cloudflare D1. No build step,
 no dependencies, no Node required to work on it.
 
+**Live:** https://camp-ezekiel-awards.pages.dev
+
+Only `public/` is deployed. Everything else stays in the repo and off the web —
+Cloudflare Pages does **not** honour `.assetsignore`, so keeping private files outside
+the build output directory is the only reliable way to avoid serving them.
+
 | File | What it is |
 | --- | --- |
-| `index.html` | The ballot + live results page. All CSS/JS inline. |
-| `leaderboard.html` | Big-screen leaderboard that auto-rotates through the awards. Point a projector at it. |
+| `public/index.html` | The ballot + live results page. All CSS/JS inline. |
+| `public/leaderboard.html` | Big-screen leaderboard that auto-rotates through the awards. Point a projector at it. |
+| `wrangler.jsonc` | Pages config. Holds the D1 binding — the name **must** stay `DB`. |
 | `functions/api/vote.js` | `POST` a ballot, `GET` which categories a ballot already voted in. |
 | `functions/api/results.js` | `GET` the live tallies. |
 | `functions/_shared.js` | Award/region lists, IP hashing, result shaping. |
@@ -40,7 +47,27 @@ Regions: `south`, `midwest`, `northeast`, `southeast`, `west`.
   trade-off for not asking anyone to sign in — see *Access codes* below if you want
   it tighter.
 
-## Deploy (no Node needed — all in the Cloudflare dashboard)
+## Already deployed
+
+Done on 2026-08-12 via wrangler (Node 24 + wrangler 4.122 are now installed):
+
+- D1 database `camp-ezekiel-awards`, id `5e2c37f9-8f03-4d64-857e-43fc4ef0842c` (ENAM),
+  schema applied.
+- Pages project `camp-ezekiel-awards`, live at https://camp-ezekiel-awards.pages.dev
+- D1 bound as `DB` via `wrangler.jsonc`.
+
+To ship a change now:
+
+```bash
+npx wrangler pages deploy --project-name camp-ezekiel-awards --branch main
+```
+
+**Still outstanding:** set `VOTE_SALT` (see below), and connect the GitHub repo in the
+dashboard if you want auto-deploy on push. Direct-upload deploys do not do that.
+
+The original from-scratch dashboard instructions are kept below for reference.
+
+## Deploy from scratch (no Node needed — all in the Cloudflare dashboard)
 
 ### 1. Put it on GitHub
 

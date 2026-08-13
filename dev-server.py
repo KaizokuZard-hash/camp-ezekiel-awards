@@ -18,7 +18,9 @@ import sys
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
-ROOT = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.abspath(__file__))
+# Only public/ is web-served, matching pages_build_output_dir in wrangler.jsonc.
+ROOT = os.path.join(REPO, "public")
 PORT = 4321
 
 # Must match functions/_shared.js.
@@ -26,7 +28,7 @@ AWARDS = ["fomo", "stealing", "cook", "runback"]
 REGIONS = ["south", "midwest", "northeast", "southeast", "west"]
 
 db = sqlite3.connect(":memory:", check_same_thread=False)
-with open(os.path.join(ROOT, "schema.sql"), encoding="utf-8") as fh:
+with open(os.path.join(REPO, "schema.sql"), encoding="utf-8") as fh:
     db.executescript(fh.read())
 
 
