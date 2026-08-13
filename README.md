@@ -22,6 +22,43 @@ the build output directory is the only reliable way to avoid serving them.
 | `functions/_shared.js` | Award/region lists, IP hashing, result shaping. |
 | `schema.sql` | The D1 table + indexes. |
 
+## Adding photos
+
+The photo section ships with placeholders. To put real pictures in:
+
+1. Drop image files into `public/photos/<region>/` — the folders already exist for
+   `south`, `midwest`, `northeast`, `southeast`, `west`.
+2. List them in the `PHOTOS` object near the top of the `<script>` in
+   `public/index.html`:
+
+```js
+const PHOTOS = {
+  south: [
+    { src: 'photos/south/campfire.jpg', alt: 'Friday night campfire' },
+    { src: 'photos/south/relay.jpg',    alt: 'The mud relay' }
+  ],
+  midwest:   [],
+  northeast: [],
+  southeast: [],
+  west:      []
+};
+```
+
+3. Commit and push. It auto-deploys.
+
+Notes:
+
+- Paths are relative to `public/`, so they start with `photos/…` (no leading slash).
+- A bare string works too — `'photos/south/relay.jpg'` — and generates alt text like
+  "South Region camp photo 2". Writing real alt text is kinder to anyone using a
+  screen reader.
+- A region with an empty array shows the "Photos go here" placeholder. You can fill
+  regions in one at a time; nothing breaks.
+- The grid, photo counts, click-to-enlarge lightbox and the random-region button all
+  pick up new photos automatically. There is nothing else to wire.
+- Resize big camera files before committing — a 12 MB photo is a 12 MB download on
+  someone's phone data. Roughly 1600px wide at ~80% JPEG quality is plenty.
+
 ## The awards
 
 | id | Award | What it's for |

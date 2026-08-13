@@ -275,6 +275,96 @@ legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)
   .msg{font-size:.78rem;line-height:1.4}
 }
 
+/* ---------- vote-honest callout ---------- */
+.callout{
+  border:1px solid var(--line);border-radius:18px;
+  background:radial-gradient(120% 160% at 50% 0%,rgba(232,196,105,.10),rgba(255,255,255,.02));
+  padding:26px;margin-bottom:34px;
+}
+.callout h3{
+  font-family:var(--display);font-size:clamp(1.3rem,3.4vw,1.85rem);
+  margin:0 0 12px;color:var(--gold-bright);font-weight:700;
+}
+.callout p{margin:0 0 11px;color:var(--muted);max-width:62ch}
+.callout strong{color:var(--text);font-weight:600}
+.callout .peek{
+  display:inline-flex;align-items:center;gap:8px;min-height:44px;
+  color:var(--gold);text-decoration:none;font-weight:600;font-size:.9rem;
+}
+.callout .peek:hover{color:var(--gold-bright);text-decoration:underline}
+
+/* ---------- photo gallery ---------- */
+.region-tabs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:14px}
+.region-tab{
+  --c:var(--gold);
+  display:inline-flex;align-items:center;gap:9px;min-height:44px;
+  padding:11px 18px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--line-soft);background:rgba(255,255,255,.022);
+  color:var(--text);font-family:var(--ui);font-weight:600;font-size:.86rem;
+  transition:background .18s,border-color .18s,transform .18s;
+}
+.region-tab:hover{background:var(--card-hi);transform:translateY(-1px)}
+.region-tab:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
+.region-tab .pip{width:11px;height:11px;border-radius:50%;border:2px solid var(--c);flex:none;transition:background .18s}
+.region-tab[aria-selected="true"]{
+  border-color:var(--c);
+  background:color-mix(in srgb,var(--c) 15%,transparent);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 40%,transparent);
+}
+.region-tab[aria-selected="true"] .pip{background:var(--c);box-shadow:0 0 10px var(--c)}
+
+.random-row{display:flex;justify-content:center;margin-bottom:28px}
+.btn.random{
+  background:transparent;color:var(--gold);border:1px dashed var(--line);
+  box-shadow:none;font-size:.76rem;padding:12px 24px;min-height:44px;
+}
+.btn.random:hover:not(:disabled){background:rgba(232,196,105,.09);transform:translateY(-1px);box-shadow:none}
+
+.gallery-head{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:14px;flex-wrap:wrap;margin-bottom:16px;
+  padding-bottom:12px;border-bottom:1px solid var(--line-soft);
+}
+.gallery-head h3{
+  font-family:var(--display);font-size:clamp(1.3rem,3.6vw,2rem);
+  margin:0;font-weight:700;color:var(--c,var(--gold-bright));transition:color .3s;
+}
+.gallery-head span{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.gallery figure{
+  margin:0;border-radius:14px;overflow:hidden;aspect-ratio:4/3;
+  border:1px solid var(--line-soft);background:rgba(255,255,255,.02);
+}
+.gallery img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;transition:transform .35s}
+.gallery figure:hover img{transform:scale(1.04)}
+
+/* Placeholder until real photos are dropped into public/photos/<region>/ */
+.photo-empty{
+  border:1px dashed var(--line);border-radius:18px;
+  padding:clamp(38px,8vw,64px) 24px;text-align:center;color:var(--muted);
+  background:repeating-linear-gradient(45deg,rgba(255,255,255,.015) 0 12px,transparent 12px 24px);
+}
+.photo-empty .big{
+  font-family:var(--display);font-size:clamp(1.2rem,3.6vw,1.7rem);
+  color:var(--gold);margin-bottom:8px;
+}
+.photo-empty p{margin:0;font-size:.9rem}
+
+.lightbox{
+  position:fixed;inset:0;z-index:70;display:none;
+  align-items:center;justify-content:center;padding:clamp(16px,4vw,44px);
+  background:rgba(4,3,7,.94);backdrop-filter:blur(6px);
+}
+.lightbox.open{display:flex}
+.lightbox img{max-width:100%;max-height:100%;border-radius:12px;box-shadow:0 30px 80px -20px #000}
+.lightbox .close{
+  position:absolute;top:16px;right:16px;width:44px;height:44px;border-radius:999px;
+  background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--text);
+  font-size:1.1rem;cursor:pointer;line-height:1;
+}
+.lightbox .close:hover{background:rgba(255,255,255,.16)}
+
 /* ---------- results ---------- */
 .results-head{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
 .result-block{
@@ -358,6 +448,7 @@ footer a:hover{text-decoration:underline}
     </a>
     <div class="nav-links">
       <a href="#ballot">Ballot</a>
+      <a href="#photos">Photos</a>
       <a href="#results">Live Results</a>
       <a href="leaderboard.html">Big Screen</a>
     </div>
@@ -401,6 +492,19 @@ footer a:hover{text-decoration:underline}
       <h2>The Categories</h2>
       <p>Vote for the region whose camp deserves it. You get one vote in each category — choose carefully, it locks in once you submit.</p>
     </div>
+    <div class="callout">
+      <h3>One rule: vote honest</h3>
+      <p>Everybody turns up for their own region. That's the easy vote — and if everyone
+         casts it, these awards just measure who brought the most people, which is a
+         much more boring competition.</p>
+      <p>The vote worth casting is for the camp that made you sit up <em>even though it
+         wasn't yours</em>. <strong>Nobody sees your ballot</strong> — no name, no login,
+         nothing that traces back to you. There is nobody to impress and nothing to
+         defend, so pick what actually deserves it.</p>
+      <p>You can absolutely vote for your own region. Just make sure they earned it.</p>
+      <a class="peek" href="#photos">See what the other four regions pulled off first &rarr;</a>
+    </div>
+
     <form id="ballotForm">
       <div id="cards"></div>
     </form>
@@ -420,6 +524,30 @@ footer a:hover{text-decoration:underline}
     <p class="msg hidden" id="msg"></p>
   </div>
 </div>
+
+<section id="photos">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>The Evidence</h2>
+      <p>Five regions, five very different weeks. Have a look before you vote — especially
+         at the four that weren't yours.</p>
+    </div>
+
+    <div class="region-tabs" role="tablist" aria-label="Choose a region" id="regionTabs"></div>
+
+    <div class="random-row">
+      <button class="btn random" id="randomBtn" type="button">
+        Show me a region at random
+      </button>
+    </div>
+
+    <div class="gallery-head" id="galleryHead">
+      <h3 id="galleryTitle">South Region</h3>
+      <span id="galleryCount">Photos coming soon</span>
+    </div>
+    <div id="galleryBody" aria-live="polite"></div>
+  </div>
+</section>
 
 <section id="results">
   <div class="wrap">
@@ -441,6 +569,11 @@ footer a:hover{text-decoration:underline}
     <div id="resultBlocks"></div>
   </div>
 </section>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button class="close" type="button" id="lightboxClose" aria-label="Close photo">&#10005;</button>
+  <img id="lightboxImg" alt="">
+</div>
 
 <footer>
   <div class="wrap">
@@ -476,6 +609,29 @@ footer a:hover{text-decoration:underline}
     { id:'southeast', name:'South East Region', color:'var(--r-southeast)' },
     { id:'west',      name:'West Region',       color:'var(--r-west)' }
   ];
+
+  /* ---------------------------------------------------------------
+     PHOTOS — to add real pictures, drop files into
+     public/photos/<region>/ and list them here. Paths are relative to
+     public/. Everything else (grid, lightbox, counts, the random
+     button) works automatically once an array is non-empty; a region
+     with an empty array shows the "photos go here" placeholder.
+
+       south: [
+         { src: 'photos/south/campfire.jpg', alt: 'Friday night campfire' },
+         { src: 'photos/south/relay.jpg',    alt: 'The mud relay' }
+       ],
+
+     A plain string works too if you don't want to write alt text —
+     but alt text is better for anyone using a screen reader.
+     --------------------------------------------------------------- */
+  const PHOTOS = {
+    south:     [],
+    midwest:   [],
+    northeast: [],
+    southeast: [],
+    west:      []
+  };
 
   const REGION_BY_ID = Object.fromEntries(REGIONS.map(r => [r.id, r]));
   const TOKEN_KEY = 'ce_awards_ballot_v1';
@@ -731,6 +887,109 @@ footer a:hover{text-decoration:underline}
     }
   }
 
+  /* ---------- photo gallery ---------- */
+  let currentRegion = REGIONS[0].id;
+  let rolling = false;
+
+  const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function normalisePhoto(entry, region, i){
+    const photo = typeof entry === 'string' ? { src: entry } : (entry || {});
+    return {
+      src: photo.src || '',
+      alt: photo.alt || `${region.name} camp photo ${i + 1}`
+    };
+  }
+
+  function buildRegionTabs(){
+    $('regionTabs').innerHTML = REGIONS.map(region => `
+      <button class="region-tab" type="button" role="tab"
+              id="tab-${region.id}" data-region="${region.id}"
+              aria-selected="false" aria-controls="galleryBody"
+              style="--c:${region.color}">
+        <span class="pip" aria-hidden="true"></span>${region.name}
+      </button>`).join('');
+
+    $('regionTabs').addEventListener('click', (e) => {
+      const tab = e.target.closest('.region-tab');
+      if (tab && !rolling) showRegion(tab.dataset.region);
+    });
+  }
+
+  function showRegion(regionId){
+    const region = REGION_BY_ID[regionId];
+    if (!region) return;
+    currentRegion = regionId;
+
+    document.querySelectorAll('.region-tab').forEach(tab => {
+      tab.setAttribute('aria-selected', String(tab.dataset.region === regionId));
+    });
+
+    $('galleryTitle').textContent = region.name;
+    $('galleryHead').style.setProperty('--c', region.color);
+
+    const shots = (PHOTOS[regionId] || []).map((p, i) => normalisePhoto(p, region, i));
+    $('galleryCount').textContent = shots.length
+      ? `${shots.length} photo${shots.length === 1 ? '' : 's'}`
+      : 'Photos coming soon';
+
+    $('galleryBody').innerHTML = shots.length
+      ? `<div class="gallery">${shots.map(p => `
+          <figure><img src="${p.src}" alt="${p.alt}" loading="lazy" decoding="async"></figure>
+        `).join('')}</div>`
+      : `<div class="photo-empty">
+           <div class="big">Photos go here</div>
+           <p>${region.name}'s pictures are on the way.</p>
+         </div>`;
+  }
+
+  // Lands on a region other than the one showing, with a short reel spin.
+  function randomRegion(){
+    if (rolling) return;
+    const others = REGIONS.filter(r => r.id !== currentRegion);
+    const target = others[Math.floor(Math.random() * others.length)];
+
+    if (reduceMotion()) { showRegion(target.id); return; }
+
+    rolling = true;
+    $('randomBtn').disabled = true;
+    let step = 0;
+    const steps = 9;
+    const reel = setInterval(() => {
+      showRegion(REGIONS[step % REGIONS.length].id);
+      if (++step >= steps) {
+        clearInterval(reel);
+        rolling = false;
+        $('randomBtn').disabled = false;
+        showRegion(target.id);
+      }
+    }, 85);
+  }
+
+  /* ---------- lightbox ---------- */
+  function openLightbox(src, alt){
+    $('lightboxImg').src = src;
+    $('lightboxImg').alt = alt || '';
+    $('lightbox').classList.add('open');
+    $('lightboxClose').focus();
+  }
+  function closeLightbox(){
+    $('lightbox').classList.remove('open');
+    $('lightboxImg').removeAttribute('src');
+  }
+
+  $('galleryBody').addEventListener('click', (e) => {
+    const img = e.target.closest('.gallery img');
+    if (img) openLightbox(img.src, img.alt);
+  });
+  $('lightbox').addEventListener('click', (e) => {
+    if (e.target === $('lightbox') || e.target === $('lightboxClose')) closeLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && $('lightbox').classList.contains('open')) closeLightbox();
+  });
+  $('randomBtn').addEventListener('click', randomRegion);
+
   /* ---------- confetti ---------- */
   function celebrate(){
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -783,6 +1042,8 @@ footer a:hover{text-decoration:underline}
 
   /* ---------- go ---------- */
   buildCards();
+  buildRegionTabs();
+  showRegion(currentRegion);
   buildResultBlocks();
   updateProgress();
   loadMyBallot();

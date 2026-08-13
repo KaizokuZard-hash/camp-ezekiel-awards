@@ -13,7 +13,12 @@ awards, with a live vote counter. Sibling project to the main camp site at
   add tooling that requires it, and prefer Cloudflare dashboard instructions over
   `wrangler` commands when writing docs.
 - `index.html` — the ballot (4 award cards × 5 region radio pickers) and the live
-  results section. Polls `/api/results` every 7s.
+  results section. Polls `/api/results` every 7s. Also holds the "vote honest" callout
+  (encourages voting outside your own region) and the photo gallery.
+- Photo gallery — region tabs + a random-region button that reel-spins and always lands
+  on a region *other* than the one showing. Photos are declared in the `PHOTOS` object
+  in `public/index.html`; files live in `public/photos/<region>/`. Empty array → the
+  "Photos go here" placeholder. Grid, counts, and lightbox are automatic. See README.
 - `leaderboard.html` — big-screen projection view. Auto-rotates through overall + the
   four awards every 9s; arrow keys change slide, space pauses. Polls every 6s.
 - `functions/_shared.js` — `AWARDS`/`REGIONS` id lists, salted IP hashing, result
