@@ -66,9 +66,21 @@ All animation respects `prefers-reduced-motion`.
 
 ## Deployment
 
-Separate Cloudflare Pages project from the main camp site. Full setup steps are in
-`README.md`. The one thing that breaks everything if missed: the D1 binding must be
-named **`DB`** and added to both Production and Preview, followed by a redeploy.
+Separate Cloudflare **Pages** project from the main camp site, connected to GitHub —
+**push to `main` auto-deploys**. Live at https://camp-ezekiel-awards.pages.dev
+
+Load-bearing details, each of which broke something once:
+
+- The D1 binding must be named **`DB`** (`env.DB`). It lives in `wrangler.jsonc`, which
+  Git builds treat as the source of truth.
+- Only `public/` is deployed (`pages_build_output_dir`). Pages does **not** honour
+  `.assetsignore`, so anything outside `public/` is how private files stay private.
+- **This must stay a Pages project, not a Worker.** Pages Functions (`functions/`) do
+  not run on Workers; the site would render but every vote would fail. The dashboard's
+  default Create flow now makes Workers — use `/pages/new/provider/github`.
+- A Direct Upload project can never be converted to Git integration. Connect Git first.
+- **Setting a secret does not affect the already-running deployment** — deploy again
+  afterwards, then verify by checking that `substr(ip_hash,1,16)` actually changed.
 
 ## Assets
 

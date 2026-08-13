@@ -49,21 +49,35 @@ Regions: `south`, `midwest`, `northeast`, `southeast`, `west`.
 
 ## Already deployed
 
-Done on 2026-08-12 via wrangler (Node 24 + wrangler 4.122 are now installed):
+- **Live: https://camp-ezekiel-awards.pages.dev**
+- Pages project `camp-ezekiel-awards`, **connected to GitHub** — every push to `main`
+  auto-deploys. No manual command needed.
+- D1 database `camp-ezekiel-awards`, id `5e2c37f9-8f03-4d64-857e-43fc4ef0842c` (ENAM).
+- D1 bound as `DB` via `wrangler.jsonc`. Git builds read that file and it is the source
+  of truth — the dashboard shows those fields read-only.
+- `VOTE_SALT` set as an encrypted secret.
 
-- D1 database `camp-ezekiel-awards`, id `5e2c37f9-8f03-4d64-857e-43fc4ef0842c` (ENAM),
-  schema applied.
-- Pages project `camp-ezekiel-awards`, live at https://camp-ezekiel-awards.pages.dev
-- D1 bound as `DB` via `wrangler.jsonc`.
+To ship a change: **commit and push to `main`.** That's it.
 
-To ship a change now:
+### Two traps that cost real time here — don't repeat them
 
-```bash
-npx wrangler pages deploy --project-name camp-ezekiel-awards --branch main
+**1. A Direct Upload project can never be connected to Git.** Per Cloudflare's docs:
+"If you choose Direct Upload, you cannot switch to Git integration later. You will have
+to create a new project with Git integration." This project was originally direct-upload
+and had to be deleted and recreated. If you ever rebuild it, connect Git *first*.
+
+**2. The dashboard's "Create" button now leads to Workers, not Pages.** A Worker will
+happily build this repo and serve the HTML — but **Pages Functions (`functions/`) do not
+run on Workers**, so every vote would fail while the site looked fine. Workers need the
+functions compiled into a single script and use `assets.directory` instead of
+`pages_build_output_dir`. Use the Pages-specific flow:
+
+```
+https://dash.cloudflare.com/<account-id>/pages/new/provider/github
 ```
 
-**Still outstanding:** set `VOTE_SALT` (see below), and connect the GitHub repo in the
-dashboard if you want auto-deploy on push. Direct-upload deploys do not do that.
+You are in the right flow if the form asks for **Build output directory**. If it asks
+for a *Deploy command* or *Worker name*, back out.
 
 The original from-scratch dashboard instructions are kept below for reference.
 
