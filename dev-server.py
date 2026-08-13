@@ -136,15 +136,16 @@ class Handler(SimpleHTTPRequestHandler):
         if not votes:
             return self._json({"error": "empty_ballot"}, 400)
 
-        if home:
-            if home not in REGIONS:
-                return self._json({"error": "unknown_home_region"}, 400)
-            for award, region in votes.items():
-                if region == home:
-                    return self._json({
-                        "error": "own_region",
-                        "message": "You cannot vote for your own region.",
-                        "award": award}, 400)
+        if home not in REGIONS:
+            return self._json({
+                "error": "home_region_required",
+                "message": "Tell us which region you represent before voting."}, 400)
+        for award, region in votes.items():
+            if region == home:
+                return self._json({
+                    "error": "own_region",
+                    "message": "You cannot vote for your own region.",
+                    "award": award}, 400)
 
         first_submission = db.execute(
             "SELECT COUNT(*) FROM votes WHERE ballot_token = ?", (token,)

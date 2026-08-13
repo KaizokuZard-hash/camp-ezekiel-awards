@@ -572,7 +572,7 @@ footer a:hover{text-decoration:underline}
     </div>
 
     <div class="home-banner hidden" id="homeBanner">
-      <span>Repping <b id="homeName">—</b> · voting for the other four</span>
+      <span>Repping <b id="homeName">—</b> <span id="homeNote">· voting for the other four</span></span>
       <button type="button" id="changeHome">Wrong region? Change it</button>
     </div>
 
@@ -792,6 +792,9 @@ footer a:hover{text-decoration:underline}
   }
 
   function updateProgress(){
+    // Keeps the "change region" control in step with whether anything is submitted.
+    refreshHomeBanner();
+
     const open = AWARDS.filter(a => !locked.has(a.id));
     const chosen = open.filter(a => picks[a.id]).length;
     const done = locked.size;
@@ -968,6 +971,7 @@ footer a:hover{text-decoration:underline}
           voting_closed:'Voting has closed — results below are final.',
           rate_limited:'Too many ballots from this network. Grab an organiser.',
           own_region:'You can’t vote for your own region — that’s the whole idea.',
+          home_region_required:'Pick the region you’re repping first.',
           no_database:'The vote database isn’t connected yet.'
         };
         // If voting closed while this page sat open, latch it so the button
@@ -1019,6 +1023,9 @@ footer a:hover{text-decoration:underline}
   }
 
   function openGate(){
+    // Belt and braces: even if something calls this, a ballot in progress can't
+    // change region.
+    if (regionIsFixed()) return;
     $('gate').classList.remove('hidden');
     // Focus the dialog itself, not the first region. Focusing a region button means
     // a stray Enter or Space silently locks the voter out of that region — a real
@@ -1028,22 +1035,38 @@ footer a:hover{text-decoration:underline}
   }
 
   function setHome(regionId){
-    if (!REGION_BY_ID[regionId]) return;
+    if (!REGION_BY_ID[regionId] || regionIsFixed()) return;
     homeRegion = regionId;
     try { localStorage.setItem(HOME_KEY, regionId); } catch (e) {}
     $('gate').classList.add('hidden');
     applyHomeLock();
   }
 
+  // Once any vote is recorded the region is fixed for this ballot. Otherwise a voter
+  // could submit part of a ballot, switch region to unlock the one they were blocked
+  // from, and end up voting for their own camp in the remaining categories.
+  function regionIsFixed(){
+    return locked.size > 0;
+  }
+
+  function refreshHomeBanner(){
+    const region = REGION_BY_ID[homeRegion];
+    $('homeBanner').classList.toggle('hidden', !region);
+    if (!region) return;
+
+    $('homeName').textContent = region.name;
+    $('homeBanner').style.setProperty('--c', region.color);
+
+    const fixed = regionIsFixed();
+    $('changeHome').classList.toggle('hidden', fixed);
+    $('homeNote').textContent = fixed
+      ? '· locked in for this ballot'
+      : '· voting for the other four';
+  }
+
   // Grey out the home region everywhere, and clear any pick that is now invalid.
   function applyHomeLock(){
-    const region = REGION_BY_ID[homeRegion];
-
-    $('homeBanner').classList.toggle('hidden', !region);
-    if (region) {
-      $('homeName').textContent = region.name;
-      $('homeBanner').style.setProperty('--c', region.color);
-    }
+    refreshHomeBanner();
 
     AWARDS.forEach(award => {
       REGIONS.forEach(r => {

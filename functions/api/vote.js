@@ -66,24 +66,29 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'empty_ballot', message: 'Pick at least one award.' }, 400);
   }
 
-  // The voter's own region, if declared. Enforced here so the rule does not depend
-  // on the UI alone. Note this is honour-system at the edges: nothing stops someone
-  // naming a region that isn't theirs, which is unenforceable without identifying
-  // people — and identifying people is the thing this site refuses to do.
-  let home = null;
-  if (homeRegion !== undefined && homeRegion !== null && homeRegion !== '') {
-    if (!REGIONS.includes(homeRegion)) {
-      return json({ error: 'unknown_home_region', homeRegion }, 400);
-    }
-    home = homeRegion;
-    const ownVote = picks.find(([, region]) => region === home);
-    if (ownVote) {
-      return json({
-        error: 'own_region',
-        message: 'You cannot vote for your own region.',
-        award: ownVote[0],
-      }, 400);
-    }
+  // The voter's own region. Required — if it were optional, omitting it would be a
+  // one-line way to vote for anybody, and the rule would mean nothing.
+  //
+  // Enforced here so it doesn't depend on the UI. It remains honour-system at the
+  // edges: nothing stops someone naming a region that isn't theirs, and the browser
+  // is the only thing pinning a ballot to one declared region. Closing that properly
+  // means storing region against the ballot token, which would make "how did West
+  // Region vote" answerable — the exact correlation this design avoids.
+  if (typeof homeRegion !== 'string' || !REGIONS.includes(homeRegion)) {
+    return json({
+      error: 'home_region_required',
+      message: 'Tell us which region you represent before voting.',
+    }, 400);
+  }
+  const home = homeRegion;
+
+  const ownVote = picks.find(([, region]) => region === home);
+  if (ownVote) {
+    return json({
+      error: 'own_region',
+      message: 'You cannot vote for your own region.',
+      award: ownVote[0],
+    }, 400);
   }
 
   const ipHash = await hashIp(request, env);
