@@ -43,6 +43,21 @@ body{
   gap:20px;padding:22px clamp(20px,4vw,54px);border-bottom:1px solid var(--line-soft);
 }
 .brandline{font-size:clamp(.62rem,1.2vw,.78rem);letter-spacing:.38em;text-transform:uppercase;color:var(--gold);font-weight:600}
+
+/* Way back to the ballot — without it this page is a dead end on a phone. */
+.back{
+  display:inline-flex;align-items:center;gap:8px;flex:none;
+  min-height:44px;padding:0 14px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(255,255,255,.04);
+  color:var(--gold);text-decoration:none;
+  font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  transition:background .18s,color .18s,transform .18s;
+  -webkit-tap-highlight-color:transparent;
+}
+.back:hover{background:rgba(232,196,105,.12);color:var(--gold-bright)}
+.back:active{transform:scale(.96)}
+.back:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
+.back svg{width:14px;height:14px;fill:currentColor;flex:none}
 .live{display:flex;align-items:center;gap:10px;font-size:clamp(.62rem,1.2vw,.8rem);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .dot{width:9px;height:9px;border-radius:50%;background:#ff4d5e;box-shadow:0 0 0 0 rgba(255,77,94,.7);animation:pulse 2s infinite}
 @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(255,77,94,0)}100%{box-shadow:0 0 0 0 rgba(255,77,94,0)}}
@@ -126,6 +141,10 @@ h1{font-family:var(--display);font-weight:800;margin:0 0 6px;line-height:1;
 @media(max-width:720px){
   body{overflow:auto}
   main{justify-content:flex-start;padding-top:18px}
+  /* Three items don't fit at 375px; the title is the least useful of them. */
+  .top{padding:12px 14px;gap:10px}
+  .brandline{display:none}
+  .back{padding:0 12px}
   .ctrl{padding:0 13px;font-size:.66rem}
   .ctrl .label{display:none}
   .ctrl svg{width:16px;height:16px}
@@ -143,6 +162,10 @@ h1{font-family:var(--display);font-weight:800;margin:0 0 6px;line-height:1;
 <div class="stage" aria-hidden="true"><div class="beam b1"></div><div class="beam b2"></div></div>
 
 <div class="top">
+  <a class="back" href="/" aria-label="Back to the ballot">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 4.6 8 12l7.4 7.4 1.6-1.6L11 12l6-5.8z"/></svg>
+    <span class="label">Ballot</span>
+  </a>
   <div class="brandline">The Camp Ezekiel Awards</div>
   <div class="live"><span class="dot"></span> Live · <b id="ballots">0</b> ballots</div>
 </div>

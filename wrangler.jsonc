@@ -13,6 +13,19 @@
   "name": "camp-ezekiel-awards",
   "compatibility_date": "2025-01-01",
   "pages_build_output_dir": "public",
+
+  // THE VOTING SWITCH.
+  //   "0" = voting open (normal)
+  //   "1" = voting frozen: ballots are refused, results stay visible, the button
+  //         reads "Voting Closed"
+  // Change the value, commit, push. It auto-deploys in about a minute. Keeping it
+  // here rather than in the dashboard means the change is versioned — you can see
+  // exactly when voting closed — and it can't hit the "secret set but not deployed"
+  // trap, because the value ships as part of the deployment itself.
+  "vars": {
+    "VOTING_CLOSED": "0"
+  },
+
   "d1_databases": [
     {
       "binding": "DB",
