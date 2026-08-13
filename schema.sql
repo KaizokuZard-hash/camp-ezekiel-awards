@@ -18,3 +18,17 @@ CREATE UNIQUE INDEX IF NOT EXISTS votes_ballot_award ON votes (ballot_token, awa
 -- Fast tallies and flood-control lookups.
 CREATE INDEX IF NOT EXISTS votes_award_region ON votes (award, region);
 CREATE INDEX IF NOT EXISTS votes_ip_award     ON votes (ip_hash, award);
+
+-- Turnout: how many people from each region voted at all.
+--
+-- Deliberately holds NO ballot_token and NO vote data. That separation is the whole
+-- point: it can answer "how many voted from the West" but can never answer "how did
+-- West voters vote", which at small numbers would identify people. One row is written
+-- the first time a ballot records a vote. Do not add a token column to this table.
+CREATE TABLE IF NOT EXISTS turnout (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  region     TEXT    NOT NULL,
+  created_at TEXT    NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS turnout_region ON turnout (region);
