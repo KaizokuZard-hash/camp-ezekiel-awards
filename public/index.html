@@ -1042,7 +1042,12 @@ footer a:hover{text-decoration:underline}
     if (msLeft <= 0) { $('closesText').textContent = 'Voting has closed'; return; }
 
     const mins = Math.floor(msLeft / 60000);
-    const when = new Date(closesAt).toLocaleTimeString([], { hour:'numeric', minute:'2-digit' });
+    // Shown in the viewer's own timezone — voters are spread across four of them —
+    // with the zone name, so "7:00 PM CDT" can't be mistaken for a mistake when the
+    // announcement said 8 PM Eastern.
+    const when = new Date(closesAt).toLocaleTimeString([], {
+      hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+    });
     if (mins >= 120)     $('closesText').textContent = `Voting closes at ${when}`;
     else if (mins >= 60) $('closesText').textContent = `Closes in ${Math.floor(mins/60)}h ${mins%60}m · ${when}`;
     else if (mins >= 1)  $('closesText').textContent = `Closes in ${mins} min · ${when}`;
