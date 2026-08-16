@@ -1,4 +1,4 @@
-import { json, shapeResults } from '../_shared.js';
+import { json, shapeResults, votingClosedNow, closesAtIso } from '../_shared.js';
 
 // GET /api/results — live tallies. Polled by the ballot page and the leaderboard.
 export async function onRequestGet({ env }) {
@@ -17,7 +17,8 @@ export async function onRequestGet({ env }) {
 
     return json({
       ok: true,
-      votingClosed: env.VOTING_CLOSED === '1',
+      votingClosed: votingClosedNow(env),
+      closesAt: closesAtIso(env),
       ...shapeResults(tally.results || [], ballots?.n || 0),
     });
   } catch (err) {

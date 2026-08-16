@@ -6,6 +6,8 @@ import {
   isValidToken,
   maxPerIp,
   shapeResults,
+  votingClosedNow,
+  closesAtIso,
 } from '../_shared.js';
 
 // GET /api/vote?token=... — which awards has this ballot already voted in?
@@ -22,7 +24,8 @@ export async function onRequestGet({ request, env }) {
 
   return json({
     ok: true,
-    votingClosed: env.VOTING_CLOSED === '1',
+    votingClosed: votingClosedNow(env),
+    closesAt: closesAtIso(env),
     voted: (rows.results || []).map((r) => ({ award: r.award, region: r.region })),
   });
 }
@@ -32,7 +35,7 @@ export async function onRequestPost({ request, env }) {
   if (!env.DB) {
     return json({ error: 'no_database', message: 'D1 binding "DB" is not configured.' }, 503);
   }
-  if (env.VOTING_CLOSED === '1') {
+  if (votingClosedNow(env)) {
     return json({ error: 'voting_closed', message: 'Voting is closed.' }, 403);
   }
 

@@ -571,6 +571,10 @@ footer a:hover{text-decoration:underline}
       <span><b id="ballotCount">—</b> ballots cast so far</span>
     </div>
 
+    <div class="live-chip hidden" id="closesChip" style="margin-left:10px">
+      <span id="closesText">—</span>
+    </div>
+
     <div class="bulbs" aria-hidden="true">
       <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
     </div>
@@ -1026,8 +1030,41 @@ footer a:hover{text-decoration:underline}
     return { total, top };
   }
 
+  // Deadline shown in the hero, refreshed from every results poll so a page left
+  // open at closing time locks itself instead of offering a submit that will fail.
+  let closesAt = null;
+
+  function renderDeadline(){
+    if (!closesAt) { $('closesChip').classList.add('hidden'); return; }
+    const msLeft = closesAt - Date.now();
+    $('closesChip').classList.remove('hidden');
+
+    if (msLeft <= 0) { $('closesText').textContent = 'Voting has closed'; return; }
+
+    const mins = Math.floor(msLeft / 60000);
+    const when = new Date(closesAt).toLocaleTimeString([], { hour:'numeric', minute:'2-digit' });
+    if (mins >= 120)     $('closesText').textContent = `Voting closes at ${when}`;
+    else if (mins >= 60) $('closesText').textContent = `Closes in ${Math.floor(mins/60)}h ${mins%60}m · ${when}`;
+    else if (mins >= 1)  $('closesText').textContent = `Closes in ${mins} min · ${when}`;
+    else                 $('closesText').textContent = 'Closing in under a minute';
+  }
+
   function renderResults(data){
     if (!data || !data.awards) return;
+
+    if (data.closesAt) {
+      const parsed = Date.parse(data.closesAt);
+      closesAt = Number.isFinite(parsed) ? parsed : null;
+    }
+    renderDeadline();
+
+    // The server is the authority on whether voting is open. Latching here means
+    // an open page closes on its own at the deadline, within one poll.
+    if (data.votingClosed && !votingClosed) {
+      votingClosed = true;
+      say('Voting has closed — results below are final.');
+      updateProgress();
+    }
 
     AWARDS.forEach(award => {
       const block = data.awards[award.id];
@@ -1409,6 +1446,8 @@ footer a:hover{text-decoration:underline}
   loadMyBallot().then(() => { if (!homeRegion && !votingClosed) openGate(); });
   loadResults();
   $('submitBtn').addEventListener('click', submitBallot);
+
+  setInterval(renderDeadline, 20000);   // keep the countdown honest between polls
 
   let timer = setInterval(loadResults, POLL_MS);
   document.addEventListener('visibilitychange', () => {

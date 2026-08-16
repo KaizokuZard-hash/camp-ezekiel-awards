@@ -23,7 +23,15 @@
   // exactly when voting closed — and it can't hit the "secret set but not deployed"
   // trap, because the value ships as part of the deployment itself.
   "vars": {
-    "VOTING_CLOSED": "0"
+    // Manual override. "1" closes voting immediately, whatever the deadline says.
+    "VOTING_CLOSED": "0",
+
+    // Automatic deadline. Voting closes the moment this passes — the server checks
+    // the clock on every request, so nothing has to be running at that time.
+    // ISO-8601 with an explicit offset. -04:00 is US Eastern in summer (EDT);
+    // it becomes -05:00 after 1 Nov 2026. Set empty to disable the deadline.
+    // 2026-08-16 20:00 Eastern = 2026-08-17 00:00 UTC.
+    "VOTING_CLOSES_AT": "2026-08-16T20:00:00-04:00"
   },
 
   "d1_databases": [

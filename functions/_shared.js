@@ -24,6 +24,23 @@ export function maxPerIp(env) {
   return Number.isFinite(n) && n > 0 ? n : DEFAULT_MAX_PER_IP;
 }
 
+// Voting is closed if the manual switch is on, or the deadline has passed.
+//
+// A bad VOTING_CLOSES_AT value leaves voting OPEN rather than closing it. Failing
+// open is recoverable — flip VOTING_CLOSED to "1" — whereas failing closed would
+// silently block everyone with no obvious cause.
+export function votingClosedNow(env) {
+  if (env.VOTING_CLOSED === '1') return true;
+  const deadline = Date.parse(env.VOTING_CLOSES_AT || '');
+  return Number.isFinite(deadline) && Date.now() >= deadline;
+}
+
+// The deadline as ISO-8601 for the page to display and count down to, or null.
+export function closesAtIso(env) {
+  const deadline = Date.parse(env.VOTING_CLOSES_AT || '');
+  return Number.isFinite(deadline) ? new Date(deadline).toISOString() : null;
+}
+
 export function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
