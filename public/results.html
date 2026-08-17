@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Winners — Camp Ezekiel 2026 People's Choice Awards</title>
+<meta name="description" content="The final results of the Camp Ezekiel 2026 People's Choice Awards. Four awards, five regions, voted for by the camp.">
+<meta name="theme-color" content="#08060c">
+
+<link rel="canonical" href="https://campezekielawards.fifusayya.org/results">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://campezekielawards.fifusayya.org/results">
+<meta property="og:site_name" content="The Camp Ezekiel Awards">
+<meta property="og:title" content="Camp Ezekiel 2026 People's Choice Awards — The Winners">
+<meta property="og:description" content="Voting has closed. See who took home each trophy.">
+<meta property="og:image" content="https://campezekielawards.fifusayya.org/share.jpg?v=2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Camp Ezekiel 2026 People's Choice Awards — The Winners">
+<meta name="twitter:description" content="Voting has closed. See who took home each trophy.">
+<meta name="twitter:image" content="https://campezekielawards.fifusayya.org/share.jpg?v=2">
+
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --gold:#e8c469;--gold-bright:#ffeab0;--gold-deep:#a8781f;
+  --ink:#08060c;--card:rgba(255,255,255,.038);--card-hi:rgba(255,255,255,.065);
+  --line:rgba(232,196,105,.26);--line-soft:rgba(255,255,255,.09);
+  --text:#f4ede0;--muted:#a79d8d;
+  --r-south:#f5a623;--r-midwest:#37c98b;--r-northeast:#5b8dff;--r-southeast:#ff6b9d;--r-west:#a970ff;
+  --display:"Playfair Display",Georgia,"Times New Roman",serif;
+  --ui:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --wrap:1000px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--ui);line-height:1.6;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+.stage{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.stage::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 80% at 50% -10%,rgba(232,196,105,.17),transparent 60%),
+             radial-gradient(90% 60% at 50% 110%,rgba(90,60,160,.18),transparent 65%)}
+.beam{position:absolute;top:-40vh;left:50%;width:34vw;height:150vh;transform-origin:50% 0;
+  filter:blur(28px);mix-blend-mode:screen;
+  background:linear-gradient(180deg,rgba(232,196,105,.20),rgba(232,196,105,.05) 45%,transparent 78%)}
+.beam.b1{margin-left:-46vw;animation:sway1 13s ease-in-out infinite}
+.beam.b2{margin-left:12vw;animation:sway2 17s ease-in-out infinite}
+@keyframes sway1{0%,100%{transform:rotate(11deg)}50%{transform:rotate(-7deg)}}
+@keyframes sway2{0%,100%{transform:rotate(-13deg)}50%{transform:rotate(6deg)}}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.wrap{position:relative;z-index:2;max-width:var(--wrap);margin:0 auto;padding:0 20px}
+
+nav{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);
+  background:linear-gradient(180deg,rgba(8,6,12,.92),rgba(8,6,12,.68));border-bottom:1px solid var(--line-soft)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:62px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.14em;
+  font-size:.7rem;text-transform:uppercase;color:var(--gold);text-decoration:none}
+.brand svg{width:20px;height:20px;flex:none}
+.nav-links{display:flex;gap:10px;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.nav-links a{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;
+  min-height:44px;padding:0 8px;border-radius:8px;transition:color .2s}
+.nav-links a:hover{color:var(--gold-bright)}
+@media(max-width:640px){.brand span{display:none}.nav-links{font-size:.68rem}}
+
+header.hero{padding:70px 0 40px;text-align:center}
+.kicker{font-size:.7rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:22px}
+.trophy{width:70px;height:70px;margin:0 auto 16px;display:block;filter:drop-shadow(0 6px 26px rgba(232,196,105,.45))}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2.6rem,9vw,5rem);line-height:.96;margin:0 0 14px;
+  background:linear-gradient(180deg,var(--gold-bright) 8%,var(--gold) 48%,var(--gold-deep) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.02em}
+.hero-sub{font-family:var(--display);font-style:italic;color:var(--muted);
+  font-size:clamp(1rem,2.6vw,1.3rem);margin:0 auto 24px;max-width:38ch}
+.chip{display:inline-flex;align-items:center;gap:10px;padding:9px 18px;border:1px solid var(--line);
+  border-radius:999px;background:rgba(232,196,105,.07);font-size:.8rem;font-weight:600}
+.chip b{color:var(--gold-bright);font-variant-numeric:tabular-nums}
+
+.bulbs{display:flex;justify-content:center;gap:14px;margin:38px 0 0}
+.bulbs i{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold);
+  animation:blink 2.4s infinite}
+.bulbs i:nth-child(2n){animation-delay:.3s}.bulbs i:nth-child(3n){animation-delay:.6s}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.22}}
+
+section{padding:46px 0}
+.sec-head{text-align:center;margin-bottom:34px}
+.sec-head h2{font-family:var(--display);font-size:clamp(1.8rem,5vw,2.8rem);margin:0 0 8px;color:var(--gold-bright);font-weight:700}
+.sec-head p{color:var(--muted);margin:0 auto;max-width:56ch}
+
+.award{position:relative;border:1px solid var(--line-soft);border-radius:20px;margin-bottom:26px;
+  padding:30px 26px 26px;background:linear-gradient(180deg,var(--card),rgba(255,255,255,.012));
+  box-shadow:0 24px 70px -46px var(--c,var(--gold))}
+.award::before,.award::after{content:"";position:absolute;width:16px;height:16px;border:1px solid var(--line);opacity:.85}
+.award::before{top:12px;left:12px;border-right:0;border-bottom:0;border-radius:4px 0 0 0}
+.award::after{bottom:12px;right:12px;border-left:0;border-top:0;border-radius:0 0 4px 0}
+.award-tag{font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:7px}
+.award h3{font-family:var(--display);font-size:clamp(1.3rem,4vw,1.9rem);margin:0 0 20px;font-weight:700;line-height:1.14}
+
+.winner{display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  border:1px solid color-mix(in srgb,var(--c,var(--gold)) 40%,transparent);border-radius:16px;
+  padding:18px 20px;margin-bottom:22px;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--c,var(--gold)) 16%,transparent),rgba(255,255,255,.02) 70%)}
+.winner .cup{font-size:1.6rem;filter:drop-shadow(0 0 10px var(--c,var(--gold)));flex:none}
+.winner .who{flex:1;min-width:180px}
+.winner .who small{display:block;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--muted);font-weight:700;margin-bottom:3px}
+.winner .who b{display:block;font-family:var(--display);font-weight:800;line-height:1.05;
+  font-size:clamp(1.4rem,5vw,2.1rem);color:var(--c,var(--gold-bright))}
+.winner .tally{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.winner .tally b{display:block;font-family:var(--display);font-size:clamp(1.3rem,4vw,1.9rem);font-weight:800;line-height:1}
+.winner .tally span{font-size:.7rem;letter-spacing:.1em;color:var(--muted)}
+
+.row{display:grid;gap:6px;margin-bottom:13px}
+.row .lbl{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.86rem}
+.row .nm{display:flex;align-items:center;gap:9px;font-weight:600;min-width:0}
+.row .sw{width:9px;height:9px;border-radius:2px;flex:none;background:var(--c)}
+.row .vl{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.8rem;white-space:nowrap}
+.row .vl b{color:var(--text);font-size:.92rem}
+.track{height:9px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+.fill{display:block;height:100%;width:0;border-radius:99px;transition:width 1s cubic-bezier(.2,.8,.2,1);
+  background:linear-gradient(90deg,color-mix(in srgb,var(--c) 55%,#000),var(--c))}
+.row.top .fill{box-shadow:0 0 18px -2px var(--c)}
+.row.top .nm{color:var(--gold-bright)}
+
+.overall{border:1px solid var(--line);border-radius:20px;padding:28px 24px;
+  background:radial-gradient(120% 140% at 50% 0%,rgba(232,196,105,.10),rgba(255,255,255,.02))}
+.loading,.error{text-align:center;color:var(--muted);padding:40px 20px;font-style:italic}
+.error{color:#ff8a95;font-style:normal}
+
+footer{border-top:1px solid var(--line-soft);margin-top:36px;padding:32px 0 46px;
+  text-align:center;color:var(--muted);font-size:.84rem}
+footer a{color:var(--gold);text-decoration:none}
+footer a:hover{text-decoration:underline}
+.hidden{display:none !important}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<div class="stage" aria-hidden="true"><div class="beam b1"></div><div class="beam b2"></div></div>
+<div class="grain" aria-hidden="true"></div>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v1a4 4 0 0 0 3 3.9"/><path d="M17 6h3v1a4 4 0 0 1-3 3.9"/><path d="M12 14v3"/><path d="M8.5 20h7l-.7-3h-5.6l-.7 3Z"/>
+      </svg>
+      <span>Camp Ezekiel Awards</span>
+    </a>
+    <div class="nav-links">
+      <a href="/">Ballot</a>
+      <a href="/#photos">Photos</a>
+      <a href="/leaderboard">Big Screen</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Camp Ezekiel 2026 · Voting Closed</div>
+    <svg class="trophy" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#ffeab0"/><stop offset="52%" stop-color="#e8c469"/><stop offset="100%" stop-color="#a8781f"/>
+      </linearGradient></defs>
+      <path d="M20 8h24v14a12 12 0 0 1-24 0V8Z" fill="url(#g)"/>
+      <path d="M20 12h-8v3a10 10 0 0 0 8 9.8M44 12h8v3a10 10 0 0 1-8 9.8" stroke="url(#g)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M32 34v8" stroke="url(#g)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M22 56h20l-2.4-9H24.4L22 56Z" fill="url(#g)"/>
+    </svg>
+    <h1>The Winners</h1>
+    <p class="hero-sub">You voted. The numbers are in. Here is how it landed.</p>
+    <div class="chip"><span><b id="ballotCount">—</b> ballots · <b id="voteCount">—</b> votes</span></div>
+    <div class="bulbs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>The Awards</h2>
+      <p>Every voter picked one region per category — and nobody could vote for their own.</p>
+    </div>
+    <div id="awards"><p class="loading">Loading the results…</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Region of the Night</h2>
+      <p>Total votes across all four awards.</p>
+    </div>
+    <div class="overall" id="overall"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p style="margin:0 0 8px">Every ballot was anonymous. Voting closed at 8:00 PM Eastern.</p>
+    <p style="margin:0">The Camp Ezekiel Awards · <a href="https://southregionyouth.org">southregionyouth.org</a></p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  const AWARDS = [
+    { id:'fomo',     tag:'The FOMO Award',          title:"I Should've Gone To That Camp" },
+    { id:'stealing', tag:'The Grand Larceny Award', title:"We're Stealing This Next Year" },
+    { id:'cook',     tag:"The Chef's Special",      title:'Who Let Them Cook' },
+    { id:'runback',  tag:'The Encore Award',        title:'Run That Back' }
+  ];
+  const REGIONS = [
+    { id:'south',     name:'South Region',      color:'var(--r-south)' },
+    { id:'midwest',   name:'Midwest Region',    color:'var(--r-midwest)' },
+    { id:'northeast', name:'North East Region', color:'var(--r-northeast)' },
+    { id:'southeast', name:'South East Region', color:'var(--r-southeast)' },
+    { id:'west',      name:'West Region',       color:'var(--r-west)' }
+  ];
+  const $ = (id) => document.getElementById(id);
+
+  // Ranked rows for one set of counts, highest first.
+  function ranked(counts){
+    return REGIONS
+      .map(r => ({ ...r, votes: counts[r.id] || 0 }))
+      .sort((a, b) => b.votes - a.votes || a.name.localeCompare(b.name));
+  }
+
+  function rowsMarkup(list, total, topVotes){
+    return list.map(r => `
+      <div class="row ${total > 0 && r.votes === topVotes ? 'top' : ''}" style="--c:${r.color}">
+        <div class="lbl">
+          <span class="nm"><span class="sw" aria-hidden="true"></span>${r.name}</span>
+          <span class="vl"><b>${r.votes}</b> ${total ? Math.round(r.votes / total * 100) : 0}%</span>
+        </div>
+        <div class="track"><i class="fill" style="width:${topVotes ? (r.votes / topVotes * 100) : 0}%"></i></div>
+      </div>`).join('');
+  }
+
+  function winnerMarkup(list, total, topVotes){
+    const winners = list.filter(r => r.votes === topVotes && total > 0);
+    if (!winners.length) return '';
+    const name = winners.length > 1
+      ? winners.map(w => w.name.replace(' Region','')).join(' & ') + ' — tied'
+      : winners[0].name;
+    return `
+      <div class="winner" style="--c:${winners[0].color}">
+        <span class="cup" aria-hidden="true">&#127942;</span>
+        <span class="who"><small>${winners.length > 1 ? 'Joint winners' : 'Winner'}</small><b>${name}</b></span>
+        <span class="tally"><b>${topVotes}</b><span>of ${total} votes</span></span>
+      </div>`;
+  }
+
+  function render(data){
+    const awardsHtml = AWARDS.map(a => {
+      const block = (data.awards && data.awards[a.id]) || { total:0, regions:{} };
+      const list = ranked(block.regions || {});
+      const total = block.total || 0;
+      const top = list.length ? list[0].votes : 0;
+      return `
+        <div class="award" style="--c:${list[0] ? list[0].color : 'var(--gold)'}">
+          <div class="award-tag">${a.tag}</div>
+          <h3>${a.title}</h3>
+          ${winnerMarkup(list, total, top)}
+          ${rowsMarkup(list, total, top)}
+        </div>`;
+    }).join('');
+    $('awards').innerHTML = awardsHtml;
+
+    const overallList = ranked(data.overall || {});
+    const overallTotal = overallList.reduce((s, r) => s + r.votes, 0);
+    const overallTop = overallList.length ? overallList[0].votes : 0;
+    $('overall').innerHTML = winnerMarkup(overallList, overallTotal, overallTop)
+                           + rowsMarkup(overallList, overallTotal, overallTop);
+
+    $('ballotCount').textContent = (data.ballots || 0).toLocaleString();
+    $('voteCount').textContent = overallTotal.toLocaleString();
+  }
+
+  async function load(){
+    try {
+      const res = await fetch('/api/results', { cache:'no-store' });
+      if (!res.ok) throw new Error('results ' + res.status);
+      render(await res.json());
+    } catch (e) {
+      $('awards').innerHTML = '<p class="error">Could not load the results. Refresh to try again.</p>';
+    }
+  }
+  load();
+})();
+</script>
+</body>
+</html>
